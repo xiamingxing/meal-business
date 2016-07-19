@@ -1,0 +1,60 @@
+package com.meal.util;
+
+import java.net.URLEncoder;
+
+public class ParamsFactory {
+
+	private static ParamsFactory instance;
+
+	private StringBuffer parametersBuffer;
+
+	public ParamsFactory() {
+
+		this.parametersBuffer = new StringBuffer();
+
+	}
+
+	public static ParamsFactory getInstance() {
+
+		if (null != instance) {
+
+			return instance;
+
+		}
+
+		return new ParamsFactory();
+	}
+
+	public ParamsFactory add(String key, Object _value) {
+
+		String value = String.valueOf(_value);
+
+		if (0 != parametersBuffer.length()) {
+
+			parametersBuffer.append("&");
+
+		}
+
+		try {
+
+			parametersBuffer.append(key).append("=")
+					.append(URLEncoder.encode(value, "utf-8"));
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+
+		return this;
+
+	}
+
+	public String getParams() {
+
+		String parameters = parametersBuffer.toString();
+
+		return parameters;
+
+	}
+}

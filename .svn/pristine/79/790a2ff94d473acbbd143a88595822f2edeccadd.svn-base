@@ -1,0 +1,137 @@
+package com.meal.activity;
+
+import android.os.Bundle;
+import android.os.Message;
+import android.view.View;
+import android.widget.TextView;
+
+import com.meal.activity.ipml.AsynThreadImpl;
+import com.meal.activity.ipml.UIThreadImpl;
+import com.meal.bean.User;
+import com.meal.util.GestureListenerImpl;
+import com.meal.util.HttpUtil;
+import com.meal.util.JSONFactoryUtil;
+import com.meal.util.ParamsFactory;
+import com.meal.util.ViewUtil;
+
+public class TestActivity extends BaseActivity {
+
+	protected void onCreate(Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.main);
+		
+		View test = findViewById(R.id.test);
+		
+		final TextView text = (TextView) findViewById(R.id.text);
+		
+		ViewUtil.addGestureListener(test, new GestureListenerImpl() {
+			
+
+			@Override
+			public void UpAction(double distance, double viewWidth,
+					double viewHeight) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void UpLeftAction(double distance, double viewWidth,
+					double viewHeight) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void LeftAction(double distance, double viewWidth,
+					double viewHeight) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void DownLeftAction(double distance, double viewWidth,
+					double viewHeight) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void DownAction(double distance, double viewWidth,
+					double viewHeight) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void DownRightAction(double distance, double viewWidth,
+					double viewHeight) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void RightAction(double distance, double viewWidth,
+					double viewHeight) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void UpRightAction(double distance, double viewWidth,
+					double viewHeight) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+
+//		initial();
+//
+//		startAsynThread("send");
+
+	}
+
+	private void initial() {
+		// TODO Auto-generated constructor stub
+
+		setUIRefreshConfig(new UIThreadImpl() {
+			@Override
+			public void refresh(Message msg) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		setAsynThreadConfig("send", true, new AsynThreadImpl() {
+
+			@Override
+			public Message excute() {
+				// TODO Auto-generated method stub
+				Message msg = Message.obtain();
+				try {
+
+					finishAsynThread("send");
+
+					ParamsFactory params = new ParamsFactory();
+
+					params.add("action", "test").add("1", "今天").add("2", "天气");
+
+					String test = JSONFactoryUtil
+							.parserToJsonString(new User());
+
+					HttpUtil.Post("", "json", params.getParams(), test);
+
+				} catch (Exception e) {
+
+					e.printStackTrace();
+
+				}
+
+				return null;
+			}
+
+		});
+
+	}
+}

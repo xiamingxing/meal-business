@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#EEEEEC"
+                android:orientation="vertical" >
+    <Button
+            android:id="@+id/customerLoginTop"
+            android:layout_width="fill_parent"
+            android:layout_height="55dip"
+            android:background="#3993CF"
+            android:text="登录"
+            android:textColor="#FFFFFF"
+            android:textSize="20dip"
+            android:enabled="false"
+            />
+    <EditText
+            android:hint="  请输入手机号"
+            android:background="#FFFFFF"
+            android:id="@+id/customerLoginName"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/customerLoginTop"
+            android:layout_marginTop="15dip"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:layout_marginBottom="1dip"
+            android:textSize="15dip"
+            android:drawablePadding="10dp"
+            android:inputType="text"
+            android:singleLine="true"
+            />
+    <EditText
+            android:hint="  请输入密码"
+            android:background="#FFFFFF"
+            android:id="@+id/customerLoginPasswd"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/customerLoginName"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:textSize="15dip"
+            android:password="true"
+            android:drawablePadding="10dp"
+            android:inputType="text"
+            android:singleLine="true"
+            />
+
+    <Button
+            android:id="@+id/customerLoginButton"
+            android:layout_width="fill_parent"
+            android:layout_height="55dip"
+            android:layout_below="@id/customerLoginPasswd"
+            android:layout_margin="15dip"
+            android:text="登录"
+            android:textSize="20dip"
+            android:textColor="#FFFFFFFF"
+            android:padding="5dip"
+            android:background="#D8584A"
+            />
+    <Button
+            android:id="@+id/customerRegButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="190dp"
+            android:text="没有账号？请点击注册"
+            android:textSize="12dip"
+            android:textColor="#3993CF"
+            android:layout_marginTop="10dp"
+            android:background="@color/bg"
+            android:layout_below="@id/customerLoginButton"
+
+            />
+</RelativeLayout>

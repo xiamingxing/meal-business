@@ -1,0 +1,255 @@
+package com.meal.action;
+
+import android.graphics.Bitmap;
+import com.meal.bean.Constant;
+import com.meal.bean.Global;
+import com.meal.bean.Menu;
+import com.meal.util.HttpUtil;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class MenuConfigAction extends BaseAction {
+
+	private static MenuConfigAction instance = null;
+
+	private String MENU_MODULE;
+
+	private String MENU_MODULE_ADD_MENU;
+
+	private String MENU_MODULE_CLEAR_MENU_LIST_BY_SID;
+
+	private String MENU_MODULE_DELETE_MENU_BY_MID;
+
+	private String MENU_MODULE_GET_MENU_BY_MID;
+
+	private String MENU_MODULE_GET_MENU_LIST_BY_SID;
+
+	private String MENU_MODULE_UPDATE_MENU_BY_MID;
+
+	private MenuConfigAction() {
+
+		this.MENU_MODULE = Constant.MENU_MODULE;
+
+		this.MENU_MODULE_ADD_MENU = Constant.MENU_MODULE_ADD_MENU;
+
+		this.MENU_MODULE_CLEAR_MENU_LIST_BY_SID = Constant.MENU_MODULE_CLEAR_MENU_LIST_BY_SID;
+
+		this.MENU_MODULE_DELETE_MENU_BY_MID = Constant.MENU_MODULE_DELETE_MENU_BY_MID;
+
+		this.MENU_MODULE_GET_MENU_BY_MID = Constant.MENU_MODULE_GET_MENU_BY_MID;
+
+		this.MENU_MODULE_GET_MENU_LIST_BY_SID = Constant.MENU_MODULE_GET_MENU_LIST_BY_SID;
+
+		this.MENU_MODULE_UPDATE_MENU_BY_MID = Constant.MENU_MODULE_UPDATE_MENU_BY_MID;
+
+	}
+
+	public static MenuConfigAction getInstance() {
+
+		if (null == instance) {
+
+			instance = new MenuConfigAction();
+
+		}
+
+		return instance;
+
+	}
+
+	/**
+	 * @param sid
+	 * @return
+	 */
+	public ArrayList<Object> getMenuList(final Long sid) {
+
+		ArrayList<Object> menuList = null;
+
+		if (null != sid && 0 <= sid) {
+
+			JSONObject jsonObject = (JSONObject) load(MENU_MODULE,
+					MENU_MODULE_GET_MENU_LIST_BY_SID, null,
+					new HashMap<String, String>() {
+						{
+							put("sid", String.valueOf(sid));
+						}
+					});
+
+			menuList = _parserJavaBeanList(jsonObject, Menu.class, "MenuList");
+
+		}
+		return menuList;
+
+	}
+
+	/**
+	 * @param menu
+	 * @return
+	 */
+	public Long addMenu(Menu menu) {
+
+		Long mid = null;
+
+		if (null != menu && null != Global.seller) {
+
+			menu.setSid(Global.seller.getSid());
+
+			JSONObject jsonObject = (JSONObject) send(MENU_MODULE,
+					MENU_MODULE_ADD_MENU, menu, null, null);
+
+			if (null != jsonObject) {
+
+				try {
+
+					mid = jsonObject.getLong("mid");
+
+				} catch (Exception e) {
+
+					e.printStackTrace();
+
+				}
+
+			}
+
+		}
+
+		return mid;
+
+	}
+
+	/**
+	 * @param mid
+	 * @return
+	 */
+	public Menu getMenuDetail(final Long mid) {
+
+		Menu menu = null;
+
+		if (null != mid && 0 <= mid) {
+
+			menu = (Menu) load(MENU_MODULE, MENU_MODULE_GET_MENU_BY_MID,
+					Menu.class, new HashMap<String, String>() {
+						{
+							put("mid", String.valueOf(mid));
+						}
+					});
+
+		}
+
+		return menu;
+
+	}
+
+	/**
+	 * @param mid
+	 * @param menu
+	 * @return
+	 */
+	public boolean updateMenu(final Long mid, Menu menu) {
+
+		boolean result = false;
+
+		if (null != mid && null != menu && null != Global.seller) {
+
+			menu.setSid(Global.seller.getSid());
+
+			// /menu.setMid(mid);
+
+			result = send(MENU_MODULE, MENU_MODULE_UPDATE_MENU_BY_MID, menu,
+					new HashMap<String, String>() {
+						{
+							put("mid", String.valueOf(mid));
+						}
+					});
+
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * @param mid
+	 * @return
+	 */
+	public boolean deleteMenu(final Long mid) {
+
+		boolean result = false;
+
+		if (null != mid && null != Global.seller) {
+
+			result = load(MENU_MODULE, MENU_MODULE_DELETE_MENU_BY_MID,
+					new HashMap<String, String>() {
+						{
+							put("mid", String.valueOf(mid));
+						}
+					});
+
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * @param sid
+	 * @return
+	 */
+	public boolean clearMenuListBySid(final Long sid) {
+
+		boolean result = false;
+
+		if (null != sid && null != Global.seller) {
+
+			result = load(MENU_MODULE, MENU_MODULE_CLEAR_MENU_LIST_BY_SID,
+					new HashMap<String, String>() {
+						{
+							put("sid", String.valueOf(sid));
+						}
+					});
+
+		}
+
+		return result;
+	}
+
+	/**
+	 * @param URL
+	 * @return
+	 */
+	public Bitmap getMenuPhoto(String URL) {
+
+		Bitmap bmp = null;
+
+		if (null != URL) {
+
+			bmp = HttpUtil.DownLoadImage(URL);
+
+		}
+
+		return bmp;
+
+	}
+
+	/**
+	 * @param path
+	 * @param fileName
+	 * @param uid
+	 * @return
+	 */
+	public String uploadMenuPhoto(String path, String fileName, Long mid) {
+
+		File file = new File(path + fileName);
+
+		if (null != file) {
+
+			HttpUtil.Upload(MENU_MODULE, "mid=" + mid, file);
+
+		}
+
+		return null;
+
+	}
+}

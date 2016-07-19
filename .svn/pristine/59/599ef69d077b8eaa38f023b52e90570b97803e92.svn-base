@@ -1,0 +1,11 @@
+package com.meal.bean;
+
+public class Global {
+
+	public static User user = null;
+	
+	public static final String USER_MODULE = "UserManageService";
+	
+	public static final String USER_MODULE_LOGIN = "login";
+	
+}

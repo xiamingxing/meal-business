@@ -1,0 +1,89 @@
+package com.meal.util;
+
+import android.os.Environment;
+
+import java.io.*;
+
+public class FileUtils {
+
+    private static final String SDPATH = Environment.getExternalStorageDirectory() + "/";
+
+    public static String getSDPATH() {
+
+        return SDPATH;
+
+    }
+
+    public static File creatSDFile(String fileName) throws IOException {
+
+        File file = new File(SDPATH + fileName);
+
+        file.createNewFile();
+
+        return file;
+    }
+
+    public static File creatSDDir(String dirName) {
+
+        File dir = new File(SDPATH + dirName);
+
+        dir.mkdirs();
+
+        return dir;
+
+    }
+
+    public static boolean isFileExist(String fileName) {
+
+        File file = new File(SDPATH + fileName);
+
+        return file.exists();
+
+    }
+
+    public static File write2SDFromInput(String path, String fileName,
+                                         InputStream input) {
+
+        File file = null;
+
+        OutputStream output = null;
+
+        try {
+
+            creatSDDir(path);
+            file = creatSDFile(path + fileName);
+            output = new FileOutputStream(file);
+            
+            byte buffer[] = new byte[4 * 1024];
+
+            while ((input.read(buffer)) != -1) {
+
+                output.write(buffer);
+
+            }
+
+            output.flush();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+
+            try {
+
+                output.close();
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+        return file;
+
+    }
+
+}

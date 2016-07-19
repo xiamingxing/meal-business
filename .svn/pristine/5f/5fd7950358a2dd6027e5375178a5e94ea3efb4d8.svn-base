@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <color name="headblue">#1D86D4</color>
+    <color name="bg">#EEEEEC</color>
+    <color name="divider">#CCCCCC</color>
+    <color name="bottomGray">#3F4147</color>
+    </resources>

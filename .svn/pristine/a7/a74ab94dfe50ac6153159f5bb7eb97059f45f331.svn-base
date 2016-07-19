@@ -1,0 +1,101 @@
+package com.meal.activity;
+
+import java.util.HashMap;
+
+import android.os.Bundle;
+import android.os.Message;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.meal.action.UserManageAction;
+import com.meal.activity.ipml.AsynThreadImpl;
+import com.meal.activity.ipml.UIThreadImpl;
+import com.meal.bean.User;
+import com.meal.util.DialogUtil;
+import com.meal.util.JSONFactoryUtil;
+
+public class TestActivity extends BaseActivity {
+
+	private HashMap<String, String> loginInfo = new HashMap<String, String>();
+
+	private UserManageAction userManage = new UserManageAction();
+
+	protected void onCreate(Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.main);
+
+		initial();
+
+		addEventListener();
+
+	}
+
+	private void initial() {
+		// TODO Auto-generated constructor stub
+		setUIRefreshConfig(new UIThreadImpl() {
+			@Override
+			public void refresh(Message msg) {
+				// TODO Auto-generated method stub
+
+				User user = (User) msg.obj;
+
+				String content = JSONFactoryUtil.parserToJsonString(user);
+
+				DialogUtil.alert(content, TestActivity.this);
+
+			}
+		});
+
+		setAsynThreadConfig("login", true, new AsynThreadImpl() {
+
+			@Override
+			public Message excute() {
+				// TODO Auto-generated method stub
+				Message msg = Message.obtain();
+
+				msg.obj = userManage.login(loginInfo.get("userName"),
+						loginInfo.get("passWord"));
+
+				finishAsynThread("login");
+
+				return msg;
+			}
+
+		});
+
+	}
+
+	private void addEventListener() {
+
+		final EditText edt_passWord = (EditText) findViewById(R.id.editText_passWord);
+
+		final EditText edt_userName = (EditText) findViewById(R.id.editText_userName);
+
+		TextView text_warning = (TextView) findViewById(R.id.text_warning);
+
+		Button btn_submit = (Button) findViewById(R.id.btn_submit);
+
+		btn_submit.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				String userName = edt_userName.getText().toString();
+
+				String passWord = edt_passWord.getText().toString();
+
+				loginInfo.put("userName", "shifeng");
+
+				loginInfo.put("passWord", "123456");
+
+				startAsynThread("login");
+
+			}
+		});
+
+		
+	}
+}

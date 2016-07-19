@@ -1,0 +1,288 @@
+package com.meal.util;
+
+import android.app.Activity;
+import android.util.DisplayMetrics;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+
+public class ViewUtil {
+
+	private static final int NO_DIRECTION = 0;
+	private static final int DIRECTION_UP_LEFT = 1;
+	private static final int DIRECTION_UP = 2;
+	private static final int DIRECTION_UP_RIGHT = 3;
+	private static final int DIRECTION_RIGHT = 4;
+	private static final int DIRECTION_DOWN_RIGHT = 5;
+	private static final int DIRECTION_DOWN = 6;
+	private static final int DIRECTION_DOWN_LEFT = 7;
+	private static final int DIRECTION_LEFT = 8;
+
+	private static double MIN_DISTANCE = 100;
+
+	/**
+	 * @param viewItem
+	 * @param listener
+	 */
+	public static void addGestureListener(View viewItem,
+			final GestureListenerImpl listener) {
+
+		viewItem.setOnTouchListener(new OnTouchListener() {
+
+			int touchDown_x;
+			int touchDown_y;
+			int touchUp_x;
+			int touchUp_y;
+
+			/* (non-Javadoc)
+			 * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
+			 */
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				int eventAction = event.getAction();
+
+				switch (eventAction) {
+
+				case MotionEvent.ACTION_DOWN:
+
+					touchDown_x = (int) event.getRawX();
+
+					touchDown_y = (int) event.getRawY();
+
+					break;
+
+				case MotionEvent.ACTION_MOVE:
+					break;
+
+				case MotionEvent.ACTION_UP:
+
+					touchUp_x = (int) event.getRawX();
+
+					touchUp_y = (int) event.getRawY();
+
+					double distance = getMoveDistance(touchDown_x, touchDown_y,
+							touchUp_x, touchUp_y);
+
+					switch (getGestureDirection(touchDown_x, touchDown_y,
+							touchUp_x, touchUp_y)) {
+
+					case NO_DIRECTION:
+						break;
+
+					case DIRECTION_UP_LEFT:
+						listener.UpLeftAction(distance, v.getWidth(),
+								v.getHeight());
+						break;
+
+					case DIRECTION_UP:
+						listener.UpAction(distance, v.getWidth(), v.getHeight());
+						break;
+
+					case DIRECTION_UP_RIGHT:
+						listener.UpRightAction(distance, v.getWidth(),
+								v.getHeight());
+						break;
+
+					case DIRECTION_RIGHT:
+						listener.RightAction(distance, v.getWidth(),
+								v.getHeight());
+						break;
+
+					case DIRECTION_DOWN_RIGHT:
+						listener.DownRightAction(distance, v.getWidth(),
+								v.getHeight());
+						break;
+
+					case DIRECTION_DOWN:
+						listener.DownAction(distance, v.getWidth(),
+								v.getHeight());
+						break;
+
+					case DIRECTION_DOWN_LEFT:
+						listener.DownLeftAction(distance, v.getWidth(),
+								v.getHeight());
+						break;
+
+					case DIRECTION_LEFT:
+						listener.LeftAction(distance, v.getWidth(),
+								v.getHeight());
+						break;
+
+					default:
+						break;
+					}
+
+					break;
+
+				}
+				return true;
+
+			}
+
+		});
+
+	}
+
+	/**
+	 * @param touchDown_x
+	 * @param touchDown_y
+	 * @param touchUp_x
+	 * @param touchUp_y
+	 * @return
+	 */
+	private static int getGestureDirection(int touchDown_x, int touchDown_y,
+			int touchUp_x, int touchUp_y) {
+
+		int direction = NO_DIRECTION;
+		double dx = touchUp_x - touchDown_x;
+		double dy = touchUp_y - touchDown_y;
+		double angle = (Math.atan2(dx, dy) * 180) / Math.PI;
+
+		if (getMoveDistance(touchDown_x, touchDown_y, touchUp_x, touchUp_y) >= MIN_DISTANCE) {
+
+			if (angle >= 157.5 || angle <= -157.5) {
+
+				direction = DIRECTION_UP;
+
+			} else if (angle >= 112.5 && angle <= 157.5) {
+
+				direction = DIRECTION_UP_RIGHT;
+
+			} else if (angle >= 67.5 && angle <= 112.5) {
+
+				direction = DIRECTION_RIGHT;
+
+			} else if (angle >= 22.5 && angle <= 67.5) {
+
+				direction = DIRECTION_DOWN_RIGHT;
+
+			} else if (angle >= -22.5 && angle <= 22.5) {
+
+				direction = DIRECTION_DOWN;
+
+			} else if (angle >= -67.5 && angle <= -22.5) {
+
+				direction = DIRECTION_DOWN_LEFT;
+
+			} else if (angle >= -112.5 && angle <= -67.5) {
+
+				direction = DIRECTION_LEFT;
+
+			} else if (angle >= -157.5 && angle <= -112.5) {
+
+				direction = DIRECTION_UP_LEFT;
+
+			}
+		}
+
+		return direction;
+
+	}
+
+	private static void addMoveAction(View viewItem, Activity activity) {
+
+		DisplayMetrics dm = activity.getResources().getDisplayMetrics();
+
+		final int screenWidth = dm.widthPixels;
+		final int screenHeight = dm.heightPixels;
+
+		viewItem.setOnTouchListener(new View.OnTouchListener() {
+
+			int touchDown_x;
+			int touchDown_y;
+			int touchUp_x;
+			int touchUp_y;
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+
+				int eventAction = event.getAction();
+
+				switch (eventAction) {
+
+				case MotionEvent.ACTION_DOWN:
+
+					touchDown_x = (int) event.getRawX();
+					touchDown_y = (int) event.getRawY();
+
+					break;
+
+				case MotionEvent.ACTION_MOVE:
+
+					int dx = (int) event.getRawX() - touchDown_x;
+					int dy = (int) event.getRawY() - touchDown_y;
+
+					int l = v.getLeft() + dx;
+					int b = v.getBottom() + dy;
+					int r = v.getRight() + dx;
+					int t = v.getTop() + dy;
+
+					if (l < 0) {
+
+						l = 0;
+						r = l + v.getWidth();
+
+					}
+
+					if (t < 0) {
+
+						t = 0;
+						b = t + v.getHeight();
+
+					}
+
+					if (r > screenWidth) {
+
+						r = screenWidth;
+						l = r - v.getWidth();
+
+					}
+
+					if (b > screenHeight) {
+
+						b = screenHeight;
+						t = b - v.getHeight();
+
+					}
+
+					v.layout(l, t, r, b);
+
+					touchDown_x = (int) event.getRawX();
+					touchDown_y = (int) event.getRawY();
+
+					v.postInvalidate();
+
+					break;
+
+				case MotionEvent.ACTION_UP:
+					break;
+				}
+
+				return true;
+			}
+		});
+
+	};
+
+	/**
+	 * @param touchDown_x
+	 * @param touchDown_y
+	 * @param touchUp_x
+	 * @param touchUp_y
+	 * @return
+	 */
+	private static double getMoveDistance(int touchDown_x, int touchDown_y,
+			int touchUp_x, int touchUp_y) {
+
+		double dx = touchUp_x - touchDown_x;
+		double dy = touchUp_y - touchDown_y;
+
+		double distance = Math.sqrt(dx * dx + dy * dy);
+
+		return distance;
+
+	}
+
+}

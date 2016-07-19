@@ -1,0 +1,113 @@
+package com.meal.action;
+
+import com.meal.bean.Constant;
+import com.meal.bean.Global;
+import com.meal.bean.Message;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class MsgManageAction extends BaseAction {
+
+	private static MsgManageAction instance = null;
+
+	public String MESSAGE_MODULE;
+
+	public String MESSAGE_MODULE_SEND_MESSAGE;
+
+	public String MESSAGE_MODULE_GET_MESSAGE_LIST;
+
+	private MsgManageAction() {
+
+		this.MESSAGE_MODULE = Constant.MESSAGE_MODULE;
+
+		this.MESSAGE_MODULE_GET_MESSAGE_LIST = Constant.MESSAGE_MODULE_GET_MESSAGE_LIST;
+
+		this.MESSAGE_MODULE_SEND_MESSAGE = Constant.MESSAGE_MODULE_SEND_MESSAGE;
+
+	}
+
+	/**
+	 * @return
+	 */
+	public static MsgManageAction getInstance() {
+
+		if (null == instance) {
+
+			instance = new MsgManageAction();
+
+		}
+
+		return instance;
+
+	}
+
+	/**
+	 * @param uid
+	 * @return
+	 */
+	public ArrayList<Object> getMessageListForUser(final Long uid) {
+
+		ArrayList<Object> messageList = null;
+
+		if (null != uid) {
+			JSONObject jsonObject = (JSONObject) load(MESSAGE_MODULE,
+					MESSAGE_MODULE_GET_MESSAGE_LIST, null,
+					new HashMap<String, String>() {
+						{
+							put("uid", String.valueOf(uid));// TODO
+
+						}
+					});
+
+			messageList = _parserJavaBeanList(jsonObject, Message.class,
+					"MessageList");
+		}
+
+		return messageList;
+
+	}
+
+	/**
+	 * @param uid
+	 * @return
+	 */
+	public ArrayList<Object> getMessageListForSeller(final Long sid) {
+
+		ArrayList<Object> messageList = null;
+
+		if (null != sid) {
+			JSONObject jsonObject = (JSONObject) load(MESSAGE_MODULE,
+					MESSAGE_MODULE_GET_MESSAGE_LIST, null,
+					new HashMap<String, String>() {
+						{
+							put("sid", String.valueOf(sid));// TODO
+
+						}
+					});
+
+			messageList = _parserJavaBeanList(jsonObject, Message.class,
+					"MessageList");
+		}
+
+		return messageList;
+
+	}
+
+	public boolean sendMessage(Message msg) {
+
+		boolean result = false;
+
+		if (null != msg && (null != Global.user || null != Global.seller)) {
+
+			result = send(MESSAGE_MODULE, MESSAGE_MODULE_SEND_MESSAGE, msg,
+					null);
+
+		}
+
+		return result;
+
+	}
+
+}

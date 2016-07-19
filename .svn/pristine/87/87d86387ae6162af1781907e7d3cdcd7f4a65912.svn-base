@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:background="@color/bg" >
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="55dip"
+            android:background="@color/headblue">
+        <ImageButton
+                android:id="@+id/OrderReturnButton"
+                android:src="@drawable/retbutton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"/>
+        <TextView
+                android:id="@+id/fileText"
+                android:text="订单列表"
+                android:background="@color/headblue"
+                android:layout_width="fill_parent"
+                android:layout_height="55dip"
+                android:layout_toRightOf="@id/OrderReturnButton"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="20dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"/>
+
+    </RelativeLayout>
+
+    <ListView
+            android:id="@+id/listView"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+    />
+</LinearLayout>

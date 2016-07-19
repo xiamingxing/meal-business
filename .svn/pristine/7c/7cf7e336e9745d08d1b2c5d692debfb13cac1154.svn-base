@@ -1,0 +1,301 @@
+package com.meal.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.AlertDialog;
+import android.os.Bundle;
+import android.os.Message;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+
+import com.meal.activity.ipml.AsynThreadImpl;
+import com.meal.activity.ipml.UIThreadImpl;
+import com.meal.bean.User;
+import com.meal.util.DialogUtil;
+import com.meal.util.HttpUtil;
+import com.meal.util.JSONFactoryUtil;
+import com.meal.util.ParamsFactory;
+
+public class AllOrderActivity extends BaseActivity {
+
+	Button retButton;
+	GridView upGrid;
+	GridView downGrid;
+	ImageView gridImage;
+	TextView gridText;
+	
+	
+	private AlertDialog dialog;
+	
+	List<Map<String, Object>> list = null;
+	List<Map<String, Object>> list2 = new ArrayList<Map<String, Object>>();
+	List<Map<String, Object>> list3 = new ArrayList<Map<String, Object>>();
+	
+	protected void onCreate(Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.allstoreorder_activity);
+		initWidget();
+//		initial();
+//
+//		startAsynThread("send");
+
+	}
+
+	private void initial() {
+		// TODO Auto-generated constructor stub
+
+		setUIRefreshConfig(new UIThreadImpl() {
+			@Override
+			public void refresh(Message msg) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		setAsynThreadConfig("send", true, new AsynThreadImpl() {
+
+			@Override
+			public Message excute() {
+				// TODO Auto-generated method stub
+				Message msg = Message.obtain();
+				try {
+
+					finishAsynThread("send");
+
+					ParamsFactory params = ParamsFactory.getInstance();
+
+					params.add("action", "test").add("1", "今天").add("2", "天气");
+
+					String test = JSONFactoryUtil
+							.parserToJsonString(new User());
+
+					HttpUtil.Post("", "json", params.getParams(), test);
+
+				} catch (Exception e) {
+
+					e.printStackTrace();
+
+				}
+
+				return null;
+			}
+
+		});
+
+	}
+	
+	
+	private void initWidget()
+	{
+		upGrid = (GridView)findViewById(R.id.upGrid);
+		downGrid = (GridView)findViewById(R.id.downGrid);
+		gridImage = (ImageView)findViewById(R.id.gridImage);
+		gridText = (TextView)findViewById(R.id.gridText);
+
+		fakeGridItemCreate();//演示专用
+	}
+	private void fakeGridItemCreate()
+	{
+		SimpleAdapter adapter = new SimpleAdapter(this,getData(),R.layout.griditem,
+				new String[]{"img","gridtext"},
+				new int[]{R.id.gridImage,R.id.gridText});
+		upGrid.setAdapter(adapter);
+		upGrid.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				dialog = new AlertDialog.Builder(AllOrderActivity.this).create();
+				dialog.show();
+				dialog.setContentView(R.layout.mybeginorder);
+				
+				ImageView imageDStore = (ImageView)dialog.findViewById(R.id.imageDStore);
+				TextView storeDName = (TextView)dialog.findViewById(R.id.storeDName);
+				TextView restDTime = (TextView)dialog.findViewById(R.id.restDTime);
+				TextView restDMoney = (TextView)dialog.findViewById(R.id.restDMoney);
+				
+				restDTime.setText("剩余时间10分钟");
+				restDMoney.setText("还差5元即可提交");
+				
+				ListView listD = (ListView)dialog.findViewById(R.id.listD);
+				
+				Button commit = (Button)dialog.findViewById(R.id.commit);
+				Button findother = (Button)dialog.findViewById(R.id.findOther);
+				
+				commit.setOnClickListener(new OnClickListener()
+				{
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+						//向商家发送信息
+					}
+					
+				});
+				
+				findother.setOnClickListener(new OnClickListener()
+				{
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+					}
+					
+				});
+				
+				if(position == 0)
+				{
+					imageDStore.setImageResource(R.drawable.baoxingcheng);
+					storeDName.setText("宝行程");
+				}
+				else if(position == 1)
+				{
+					imageDStore.setImageResource(R.drawable.jingkelong);
+					storeDName.setText("京客隆");
+				}
+				else if(position == 2)
+				{
+					imageDStore.setImageResource(R.drawable.yigou);
+					storeDName.setText("易购");
+				}
+				else if(position == 3)
+				{
+					imageDStore.setImageResource(R.drawable.qinlicheng);
+					storeDName.setText("秦立成百货");
+				}
+				SimpleAdapter adapterD = new SimpleAdapter(AllOrderActivity.this,getDataD(),R.layout.mybuylistitem,
+						new String[]{"mybuylistNameText","mybuylistMoneyText"},
+						new int[]{R.id.mybuylistNameText,R.id.mybuylistMoneyText});
+				listD.setAdapter(adapterD);
+//				listD.setOnItemClickListener(new OnItemClickListener() {
+//
+//					@Override
+//					public void onItemClick(AdapterView<?> parent, View view,
+//							int position, long id) {
+//						// TODO Auto-generated method stub
+//						
+//					}
+//				});
+			}
+		});
+		SimpleAdapter adapter2 = new SimpleAdapter(this,getData2(),R.layout.griditem,
+				new String[]{"img","gridtext"},
+				new int[]{R.id.gridImage,R.id.gridText});
+		downGrid.setAdapter(adapter2);
+		downGrid.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+			}
+		});
+	}
+
+	private List<Map<String, Object>> getData()
+	{
+		if(list == null)
+		{
+			list = new ArrayList<Map<String, Object>>();
+		}
+		else
+		{
+			list.clear();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("img", R.drawable.baoxingcheng);
+		map.put("gridtext", "宝行程");
+		list.add(map);
+
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.jingkelong);
+		map.put("gridtext", "京客隆");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.yigou);
+		map.put("gridtext", "易购");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.qinlicheng);
+		map.put("gridtext", "秦立成百货");
+		list.add(map);
+		return list;
+	}
+	
+	private List<Map<String, Object>> getData2()
+	{
+		if(list2 == null)
+		{
+			list2 = new ArrayList<Map<String, Object>>();
+		}
+		else
+		{
+			list2.clear();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("img", R.drawable.baoxingcheng);
+		map.put("gridtext", "宝行程");
+		list2.add(map);
+
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.jingkelong);
+		map.put("gridtext", "京客隆");
+		list2.add(map);
+		
+		return list2;
+	}
+	
+	private List<Map<String, Object>> getDataD()
+	{
+		if(list3 == null)
+		{
+			list3 = new ArrayList<Map<String, Object>>();
+		}
+		else
+		{
+			list3.clear();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("mybuylistNameText", "旺仔牛奶");
+		map.put("mybuylistMoneyText", "￥ 5 * 3");
+		list3.add(map);
+
+		map = new HashMap<String, Object>();
+		map.put("mybuylistNameText", "养乐多");
+		map.put("mybuylistMoneyText", "￥ 9 * 2");
+		list3.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("mybuylistNameText", "泡椒凤爪");
+		map.put("mybuylistMoneyText", "￥ 5 * 3");
+		list3.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("mybuylistNameText", "大白兔奶糖");
+		map.put("mybuylistMoneyText", "￥ 8 * 1");
+		list3.add(map);
+		
+		return list3;
+	}
+}

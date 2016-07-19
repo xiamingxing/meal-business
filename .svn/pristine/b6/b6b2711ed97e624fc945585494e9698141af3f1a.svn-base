@@ -1,0 +1,234 @@
+package com.meal.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.meal.activity.UndergolistActivity.MyAdapter;
+import com.meal.activity.UndergolistActivity.ViewHolder;
+import com.meal.activity.ipml.AsynThreadImpl;
+import com.meal.activity.ipml.UIThreadImpl;
+import com.meal.util.HttpUtil;
+
+public class AddGoodslistActivity extends BaseActivity {
+	
+	List<Map<String, Object>> dataList;
+	
+	ListView goodsList;
+	
+	Button storeBuyBegin;
+	Button retButton1;
+	
+	private AlertDialog dialog;
+	
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.goods_activity);
+        initWidget();
+//        initial();
+//        startAsynThread("send");
+    }
+	
+
+	private void initWidget()
+	{
+		
+		retButton1 = (Button)findViewById(R.id.retButton1);
+		storeBuyBegin = (Button)findViewById(R.id.storeBuyBegin);
+		storeBuyBegin.setText("加入");
+		
+		retButton1.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				AddGoodslistActivity.this.finish();
+			}
+		});
+		
+		
+		
+		storeBuyBegin.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+				//intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				intent.setClass(AddGoodslistActivity.this,
+							AllOrderActivity.class);
+				startActivity(intent);
+			}
+		});
+		
+		fakeListItemCreate();//演示专用
+	}
+	private void fakeListItemCreate()
+	{
+		goodsList = (ListView) findViewById(R.id.goodsList);
+		
+		final MyAdapter myAdapter = new MyAdapter(this);
+		
+		dataList = getData();
+		
+		goodsList.setAdapter(myAdapter);
+
+	}
+
+	private List<Map<String, Object>> getData()
+	{
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("img", R.drawable.yangleduo);
+		map.put("goodsname", "养乐多");
+		map.put("numtext", "1");
+		map.put("moneybutton", "￥10");
+		list.add(map);
+
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.qiaqia);
+		map.put("goodsname", "恰恰香瓜子");
+		map.put("numtext", "1");
+		map.put("moneybutton", "￥6.5");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.dabaitu);
+		map.put("goodsname", "大白兔奶糖");
+		map.put("numtext", "1");
+		map.put("moneybutton", "￥8.5");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.fengzhua);
+		map.put("goodsname", "泡椒凤爪");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥6");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.leshi);
+		map.put("goodsname", "乐事薯片");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥6");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.wangzai);
+		map.put("goodsname", "旺仔牛奶");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥5");
+		list.add(map);
+		
+		return list;
+		
+	}
+	
+	public final class ViewHolder 
+	{
+		ImageView goodsImage;
+		TextView goodsName;
+		TextView numText;
+		Button moneyButton;
+	}	
+    
+	
+	public class MyAdapter extends BaseAdapter
+	{
+
+		private LayoutInflater mInflater;
+
+		public MyAdapter(Context context) 
+		{
+			this.mInflater = LayoutInflater.from(context);
+		}
+
+		//@Override
+		public int getCount() 
+		{
+			// TODO Auto-generated method stub
+			return dataList.size();
+		}
+
+		//@Override
+		public Object getItem(int arg0) 
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		//@Override
+		public long getItemId(int arg0) 
+		{
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		//@Override
+		public View getView(int position, View convertView, ViewGroup parent) 
+		{
+			
+			HashMap<String, Object> viewItem = (HashMap<String, Object>) dataList.get(position); 
+
+			ViewHolder holder = null;
+
+			if (convertView == null) 
+			{
+				convertView = mInflater.inflate(R.layout.goodslistitem, null);
+				holder = new ViewHolder();
+				holder.goodsImage = (ImageView) convertView.findViewById(R.id.goodsImage);
+				holder.goodsName = (TextView) convertView.findViewById(R.id.goodsName);
+				holder.numText = (TextView) convertView.findViewById(R.id.numText);
+				holder.moneyButton = (Button) convertView.findViewById(R.id.moneyButton);
+				convertView.setTag(holder);
+
+			} else 
+			{
+
+				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			String tempString = viewItem.get("img").toString();
+			
+			Integer tempInteger = Integer.valueOf(tempString);
+			
+			holder.goodsImage.setBackgroundResource(tempInteger);
+			holder.goodsName.setText((CharSequence) viewItem.get("goodsname"));
+			holder.numText.setText((CharSequence) viewItem.get("numtext"));
+			holder.moneyButton.setText((CharSequence) viewItem.get("moneybutton"));
+			holder.moneyButton.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					
+				}
+			});
+
+			return convertView;
+		}
+
+	}
+}

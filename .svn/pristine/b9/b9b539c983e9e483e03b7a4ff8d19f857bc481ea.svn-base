@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/bg"
+              android:orientation="vertical" >
+    <Button
+            android:id="@+id/registerTop"
+            android:layout_width="fill_parent"
+            android:layout_height="55dip"
+            android:background="@color/headblue"
+            android:text="商户中心"
+            android:textColor="#FFFFFFFF"
+            android:textSize="20dip"
+            android:enabled="false"
+            />
+    <TextView
+            android:id="@+id/salesInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="易购便利店"
+            android:textSize="15sp"
+            android:layout_marginTop="20dip"
+            android:layout_marginLeft="15dp"
+android:textColor="@android:color/black"
+            />
+    <TextView
+            android:id="@+id/salesAddress"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="15sp"
+            android:text="北京市朝阳区酒仙桥路6号院   15940389032"
+android:layout_marginLeft="15dp"
+android:textColor="@android:color/black"
+        />
+    <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF"
+            />
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+
+            <Button
+                    android:id="@+id/uploadButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:background="#FFFFFF"
+                    android:layout_marginTop="50dip"
+                    android:layout_marginLeft="15dip"
+                    android:layout_marginRight="15dip"
+                    android:layout_marginBottom="1dp"
+                    android:text="  上传商品"
+                    android:textSize="15sp"
+                    android:gravity="left|center_vertical"
+
+                    />
+
+
+            <Button
+                    android:id="@+id/changeButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:background="#FFFFFF"
+                    android:layout_marginLeft="15dip"
+                    android:layout_marginRight="15dip"
+                    android:layout_marginBottom="1dp"
+                    android:layout_below="@id/uploadButton"
+                    android:text="  修改商品"
+                    android:gravity="left|center_vertical"
+android:textSize="15sp"
+                    />
+
+                <Button
+                    android:id="@+id/acceptButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/changeButton"
+                    android:background="#FFFFFF"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginLeft="15dip"
+                    android:layout_marginRight="15dip"
+                    android:layout_marginBottom="1dp"
+                    android:text="  开启接单"
+                    android:gravity="left|center_vertical"
+                    android:textSize="15sp"
+                    />
+                <Button
+                    android:id="@+id/closeButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:background="#FFFFFF"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginLeft="15dip"
+                    android:layout_marginRight="15dip"
+                    android:layout_marginBottom="1dp"
+                    android:text="  关闭接单"
+                    android:layout_below="@id/changeButton"
+                    android:gravity="left|center_vertical"
+                    android:visibility="invisible"
+                    android:textSize="15sp"
+                    />
+ 
+            
+                <Button
+            android:id="@+id/orderListButton"
+            android:layout_width="fill_parent"
+            android:layout_height="55dip"
+            android:layout_below="@id/acceptButton"
+            android:layout_margin="15dip"
+            android:text="查看订单列表"
+            android:textColor="#FFFFFFFF"
+            android:padding="5dip"
+            android:background="@color/buttonColor"
+            android:visibility="invisible"
+            android:textSize="15sp"
+            />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

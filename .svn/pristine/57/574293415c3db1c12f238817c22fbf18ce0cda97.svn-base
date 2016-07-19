@@ -1,0 +1,279 @@
+package com.meal.action;
+
+import com.meal.bean.Global;
+import com.meal.bean.User;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+public class UserManageAction extends BaseAction {
+
+    private String USER_MODULE;
+
+    private String USER_MODULE_LOGIN;
+
+    private String USER_MODULE_LOGOUT;
+
+    private String USER_MODULE_REGISTER;
+
+    private String USER_MODULE_GET_USER_INFO_BY_UID;
+
+    private String USER_MODULE_GET_UID_BY_USERNAME;
+
+    private String USER_MODULE_UPDATE_USER_INFO;
+
+    public UserManageAction() {
+
+        this.USER_MODULE = Global.USER_MODULE;
+
+        this.USER_MODULE_LOGIN = Global.USER_MODULE_LOGIN;
+
+        this.USER_MODULE_LOGOUT = Global.USER_MODULE_LOGOUT;
+
+        this.USER_MODULE_REGISTER = Global.USER_MODULE_REGISTER;
+
+        this.USER_MODULE_GET_USER_INFO_BY_UID = Global.USER_MODULE_GET_USER_INFO_BY_UID;
+
+        this.USER_MODULE_GET_UID_BY_USERNAME = Global.USER_MODULE_GET_UID_BY_USERNAME;
+
+        this.USER_MODULE_UPDATE_USER_INFO = Global.USER_MODULE_UPDATE_USER_INFO;
+
+    }
+
+    /**
+     * @param userName
+     * @param passWord
+     * @return
+     */
+    public User login(final String userName, final String passWord) {
+
+        User user = null;
+
+        if (null != userName && null != passWord) {
+
+            user = (User) load(USER_MODULE, USER_MODULE_LOGIN, User.class,
+                    new HashMap<String, String>() {
+                        {
+
+                            put("userName", userName);
+                            put("passWord", passWord);
+
+                        }
+                    }
+            );
+
+            Global.user = user;
+
+        }
+
+        return user;
+
+    }
+
+    /**
+     * @return
+     */
+    public User freeLogin() {
+
+        User user = null;
+
+        if (null != Global.user) {
+
+            user = login(Global.user.getName(), Global.user.getPassWord());
+
+            Global.user = user;
+
+        }
+
+        return user;
+
+    }
+
+    /**
+     *
+     */
+    public void logout() {
+
+        final String uid = String.valueOf(Global.user.getUid());
+
+        load(USER_MODULE, USER_MODULE_LOGOUT, User.class,
+                new HashMap<String, String>() {
+                    {
+
+                        put("uid", uid);
+
+                    }
+                }
+        );
+        Global.user = null;
+
+    }
+
+    /**
+     * @param user
+     * @return
+     */
+    public boolean register(User user) {
+
+        boolean result = false;
+
+        if (null != user) {
+
+            JSONObject jsonData = (JSONObject) send(USER_MODULE,
+                    USER_MODULE_REGISTER, user, null, null);
+
+            if (null != jsonData) {
+
+                try {
+
+                    Long uid = jsonData.getLong("uid");
+
+                    if (null != uid) {
+
+                        user.setUid(uid);
+
+                        Global.user = user;
+
+                        result = true;
+
+                    }
+
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+
+                    e.printStackTrace();
+
+                }
+
+            }
+
+        }
+
+        return result;
+
+    }
+
+    /**
+     * @param uid
+     * @return
+     */
+    public User getUserInfoByUid(final Long uid) {
+
+        User user = null;
+
+        if (null != uid) {
+
+            user = (User) load(USER_MODULE, USER_MODULE_GET_USER_INFO_BY_UID,
+                    User.class, new HashMap<String, String>() {
+                        {
+                            put("uid", String.valueOf(uid));
+                        }
+                    }
+            );
+
+        }
+
+        return user;
+
+    }
+
+    /**
+     * @param uid
+     * @return
+     */
+    public User getUserInfoByUserName(String userName) {
+
+        User user = null;
+
+        final Long uid = getUidByUserName(userName);
+
+        if (null != uid) {
+
+            user = (User) load(USER_MODULE, USER_MODULE_GET_USER_INFO_BY_UID,
+                    User.class, new HashMap<String, String>() {
+                        {
+                            put("uid", String.valueOf(uid));
+                        }
+                    }
+            );
+
+        }
+
+        return user;
+
+    }
+
+    /**
+     * @param userName
+     * @return
+     */
+    public Long getUidByUserName(final String userName) {
+
+        Long uid = null;
+
+        if (null != userName) {
+
+            JSONObject jsonData = (JSONObject) load(USER_MODULE,
+                    USER_MODULE_GET_UID_BY_USERNAME, null,
+                    new HashMap<String, String>() {
+                        {
+                            put("userName", userName);
+                        }
+                    }
+            );
+            if (null != jsonData) {
+
+                try {
+
+                    uid = jsonData.getLong("uid");
+
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+
+                    e.printStackTrace();
+
+                }
+
+            }
+
+        }
+
+        return uid;
+
+    }
+
+    /**
+     * @param user
+     * @return
+     */
+    public boolean updateUserInfo(User user) {
+
+        boolean result = false;
+
+        if (null != user && null != Global.user) {
+
+            user.setUid(Global.user.getUid());
+
+            JSONObject jsonData = (JSONObject) send(USER_MODULE,
+                    USER_MODULE_UPDATE_USER_INFO, user, null, null);
+
+            if (null != jsonData) {
+
+                User updatedUser = getUserInfoByUid(Global.user.getUid());
+
+                if (null != updatedUser) {
+
+                    Global.user = updatedUser;
+
+                    result = true;
+                }
+
+            }
+
+        }
+
+        return result;
+
+    }
+}

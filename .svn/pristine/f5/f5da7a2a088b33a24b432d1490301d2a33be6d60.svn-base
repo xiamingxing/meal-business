@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/bg">
+    <RelativeLayout
+            android:id="@+id/top_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/headblue"
+            android:orientation="horizontal">
+        <Button
+            	android:id="@+id/retbutton4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:drawableLeft="@drawable/retbutton"
+                android:background="@android:color/transparent"
+                />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@android:color/white"
+                android:text="我要凑单"
+                android:textSize="20sp"
+                />
+        <Button
+            	android:id="@+id/myorder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="我的订单"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:background="@android:color/transparent"
+                />
+    </RelativeLayout>
+    <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="200dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="15dip"
+            android:stretchColumns="0,1,2" >
+        <TableRow
+                android:layout_weight="1">
+            <Button android:id="@+id/snackButton"
+                	android:background="@color/bg"
+                    android:gravity="center"
+                    android:drawableTop="@drawable/snack"
+                    android:text="零食"
+                    android:textSize="15sp"
+                    android:layout_weight="1"/>
+            <Button android:id="@+id/breadButton"
+                	android:background="@color/bg"
+                    android:drawableTop="@drawable/bread"
+                    android:text="面包西点"
+                    android:textSize="15sp"
+                    android:layout_weight="1"/>
+            <Button android:id="@+id/fruitButton"
+                	android:background="@color/bg"
+                    android:drawableTop="@drawable/fruit"
+                    android:text="水果"
+                    android:textSize="15sp"
+                    android:layout_weight="1"/>
+        </TableRow>
+        <TableRow
+                android:layout_weight="1">
+            <Button android:id="@+id/drinkButton"
+                	android:background="@color/bg"
+                    android:gravity="center"
+                    android:drawableTop="@drawable/drink"
+                    android:text="饮料"
+                    android:textSize="15sp"
+                    android:layout_weight="1"/>
+            <Button android:id="@+id/icecreamButton"
+                	android:background="@color/bg"
+                    android:drawableTop="@drawable/icecream"
+                    android:text="冰淇淋"
+                    android:textSize="15sp"
+                    android:layout_weight="1"/>
+            <Button android:id="@+id/cookedfoodButton"
+                	android:background="@color/bg"
+                    android:drawableTop="@drawable/cookedfood"
+                    android:text="熟食"
+                    android:textSize="15sp"
+                    android:layout_weight="1"/>
+        </TableRow>
+    </TableLayout>
+    <RelativeLayout
+            android:id="@+id/middle_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/headblue"
+            android:orientation="horizontal">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="25dip"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:text="    正在进行的凑单"
+                android:textSize="15sp"
+                />
+     </RelativeLayout>
+     <ListView
+            android:id="@+id/undergolist"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:footerDividersEnabled="false" 
+            android:listSelector="#00000000"
+            android:cacheColorHint="#00000000"
+            android:dividerHeight="1dp"
+             />
+
+</LinearLayout>

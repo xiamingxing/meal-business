@@ -1,0 +1,90 @@
+package com.meal.util;
+
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class ErrUtil {
+
+	private static final HashMap<String, String> ERR_INFO;
+
+	private static HashMap<String, String> ERR_BUFFER;
+
+	private static ArrayList<String> ERR_LOGLIST;
+
+	static {
+
+		ERR_INFO = new HashMap<String, String>() {
+			{
+				put("ERR_RESPONSE_DATA", "服务器数据错误！");
+				put("EXCEPTION_FORMAT_DATA", "数据解析异常！");
+				put("FAIL_CONNECT_SERVER", "服务器连接失败！");
+				put("EXCEPTION_CONNECT_SERVER", "服务器连接异常！");
+			}
+		};
+
+		ERR_BUFFER = new HashMap<String, String>() {
+		};
+
+		ERR_LOGLIST = new ArrayList<String>();
+
+	}
+
+	public static void log(String action, String errKey) {
+
+		String sysTime = SysUtil.getTime();
+
+		String errorInfo = getErrInfoValue(errKey);
+
+		ERR_BUFFER.put(action, sysTime + "/" + errorInfo);
+
+		ERR_LOGLIST.add(" time:" + sysTime + " action:" + action + " error:"
+				+ errorInfo);
+
+	}
+
+	public static String read(String action) {
+
+		String err = null;
+
+		if (null != ERR_BUFFER.get(action)) {
+
+			err = ERR_BUFFER.get(action);
+
+		}
+
+		return err;
+
+	}
+
+	public static void print() {
+
+		String printText = "";
+
+		for (int i = 0; i < ERR_LOGLIST.size(); i++) {
+
+			printText = printText + ERR_LOGLIST.get(i) + " \n";
+
+		}
+
+		// System.out.println(printText);
+
+		Log.i("Error Info", printText);
+
+	}
+
+	private static String getErrInfoValue(String errInfoKey) {
+
+		String errInfoValue = "unKnown Error!";
+
+		if (null != ERR_INFO.get(errInfoKey)) {
+
+			errInfoValue = ERR_INFO.get(errInfoKey);
+
+		}
+
+		return errInfoValue;
+	}
+
+}

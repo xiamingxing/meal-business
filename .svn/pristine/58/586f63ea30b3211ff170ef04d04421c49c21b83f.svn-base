@@ -1,0 +1,497 @@
+package com.meal.action;
+
+import com.meal.bean.*;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class DealManageAction extends BaseAction {
+
+	private static DealManageAction instance = null;
+
+	private final String STATUS_NEW_ORDER = "new";
+
+	private final String STATUS_CONFITM_ORDER = "confirm";
+
+	private final String STATUS_REFUSE_ORDER = "refuse";
+
+	private final String STATUS_CLOSE_ORDER = "close";
+
+	private String ORDER_MODULE;
+
+	private String ORDER_MODULE_GET_SELLER_LIST_BY_TYPE;
+
+	private String ORDER_MODULE_ADD_ORDER;
+
+	private String ORDER_MODULE_GET_ORDER_BY_OID;
+
+	private String ORDER_MODULE_GET_ORDER_BY_DATE;
+
+	private String ORDER_MODULE_GET_MENU_RANKING_BY_DATE;
+
+	private String ORDER_MODULE_DELETE_ORDER_BY_OID;
+
+	private String ORDER_MODULE_CONFIRM_ORDER_BY_OID;
+
+	private String ORDER_MODULE_REFUSE_ORDER_BY_OID;
+
+	private String ORDER_MODULE_CLOSE_ORDER_BY_OID;
+
+	private String ORDER_MODULE_GET_ORDER_STATUS_BY_OID;
+
+	private String ORDER_MODULE_GET_USER_ORDER_BY_UID;
+
+	private String ORDER_MODULE_GET_SELLER_ORDER_BY_SID;
+
+	private String ORDER_MODULE_SET_ORDER_SCORE_BY_OID;
+
+	private String ORDER_MODULE_SET_ORDER_STATUS_BY_OID;
+
+	private String ORDER_MODULE_UPDATE_ORDER_BY_OID;
+
+	private DealManageAction() {
+
+		this.ORDER_MODULE = Constant.ORDER_MODULE;
+
+		this.ORDER_MODULE_GET_SELLER_LIST_BY_TYPE = Constant.ORDER_MODULE_GET_SELLER_LIST_BY_TYPE;
+
+		this.ORDER_MODULE_ADD_ORDER = Constant.ORDER_MODULE_ADD_ORDER;
+
+		this.ORDER_MODULE_GET_ORDER_BY_OID = Constant.ORDER_MODULE_GET_ORDER_BY_OID;
+
+		this.ORDER_MODULE_GET_ORDER_BY_DATE = Constant.ORDER_MODULE_GET_ORDER_BY_DATE;
+
+		this.ORDER_MODULE_GET_MENU_RANKING_BY_DATE = Constant.ORDER_MODULE_GET_MENU_RANKING_BY_DATE;
+
+		this.ORDER_MODULE_DELETE_ORDER_BY_OID = Constant.ORDER_MODULE_DELETE_ORDER_BY_OID;
+
+		this.ORDER_MODULE_CONFIRM_ORDER_BY_OID = Constant.ORDER_MODULE_CONFIRM_ORDER_BY_OID;
+
+		this.ORDER_MODULE_REFUSE_ORDER_BY_OID = Constant.ORDER_MODULE_REFUSE_ORDER_BY_OID;
+
+		this.ORDER_MODULE_CLOSE_ORDER_BY_OID = Constant.ORDER_MODULE_CLOSE_ORDER_BY_OID;
+
+		this.ORDER_MODULE_GET_ORDER_STATUS_BY_OID = Constant.ORDER_MODULE_GET_ORDER_STATUS_BY_OID;
+
+		this.ORDER_MODULE_GET_USER_ORDER_BY_UID = Constant.ORDER_MODULE_GET_USER_ORDER_BY_UID;
+
+		this.ORDER_MODULE_GET_SELLER_ORDER_BY_SID = Constant.ORDER_MODULE_GET_SELLER_ORDER_BY_SID;
+
+		this.ORDER_MODULE_SET_ORDER_SCORE_BY_OID = Constant.ORDER_MODULE_SET_ORDER_SCORE_BY_OID;
+
+		this.ORDER_MODULE_SET_ORDER_STATUS_BY_OID = Constant.ORDER_MODULE_SET_ORDER_STATUS_BY_OID;
+
+		this.ORDER_MODULE_UPDATE_ORDER_BY_OID = Constant.ORDER_MODULE_UPDATE_ORDER_BY_OID;
+
+	}
+
+	/**
+	 * @return
+	 */
+	public static DealManageAction getInstance() {
+
+		if (null == instance) {
+
+			instance = new DealManageAction();
+
+		}
+
+		return instance;
+
+	}
+
+	/**
+	 * @param type
+	 * @return
+	 */
+	public ArrayList<Object> getSellerList(final String type) {
+
+		ArrayList<Object> sellerList = null;
+
+		if (null != type) {
+			JSONObject jsonObject = (JSONObject) load(ORDER_MODULE,
+					ORDER_MODULE_GET_SELLER_LIST_BY_TYPE, null,
+					new HashMap<String, String>() {
+						{
+							put("type", type);// TODO
+
+						}
+					});
+
+			sellerList = _parserJavaBeanList(jsonObject, Seller.class,
+					"SellerList");
+		}
+
+		return sellerList;
+
+	}
+
+	/**
+	 * @param sid
+	 * @return
+	 */
+	public Seller getSellerInfo(final Long sid) {
+
+		Seller seller = null;
+
+		if (null != sid) {
+
+			seller = (Seller) load(Constant.SELLER_MODULE,
+					Constant.SELLER_MODULE_GET_SELLER_INFO, Seller.class,
+					new HashMap<String, String>() {
+						{
+							put("sid", String.valueOf(sid));
+						}
+					});
+
+		}
+
+		return seller;
+
+	}
+
+	/**
+	 * @param sid
+	 * @return
+	 */
+	public ArrayList<Object> getMenuListForUser(final Long sid) {
+
+		ArrayList<Object> menuList = null;
+
+		if (null != sid && 0 <= sid) {
+
+			JSONObject jsonObject = (JSONObject) load(Constant.MENU_MODULE,
+					Constant.MENU_MODULE_GET_MENU_LIST_BY_SID, null,
+					new HashMap<String, String>() {
+						{
+							put("sid", String.valueOf(sid));
+						}
+					});
+
+			menuList = _parserJavaBeanList(jsonObject, Menu.class, "MenuList");
+		}
+
+		return menuList;
+
+	}
+
+	/**
+	 * @param uid
+	 * @return
+	 */
+	public ArrayList<Object> getOrderListForUser(final Long uid) {
+
+		JSONObject jsonObject = null;
+
+		if (null != uid) {
+
+			jsonObject = (JSONObject) load(ORDER_MODULE,
+					ORDER_MODULE_GET_USER_ORDER_BY_UID, null,
+					new HashMap<String, String>() {
+						{
+							put("uid", String.valueOf(uid));
+						}
+					});
+
+		}
+
+		return _parserJavaBeanList(jsonObject, Order.class, "OrderList");
+
+	}
+
+	/**
+	 * @param uid
+	 * @return
+	 */
+	public ArrayList<Object> getOrderListForSeller(final Long sid) {
+
+		JSONObject jsonObject = null;
+
+		if (null != sid) {
+
+			jsonObject = (JSONObject) load(ORDER_MODULE,
+					ORDER_MODULE_GET_SELLER_ORDER_BY_SID, null,
+					new HashMap<String, String>() {
+						{
+							put("sid", String.valueOf(sid));
+						}
+					});
+
+		}
+
+		return _parserJavaBeanList(jsonObject, Order.class, "OrderList");
+
+	}
+
+	/**
+	 * @param order
+	 * @return
+	 */
+	public Long addOrder(Order order) {
+
+		Long oid = null;
+
+		if (null != order && null != Global.user) {
+
+			order.setUid(Global.user.getUid());
+			order.setStatus(STATUS_NEW_ORDER);
+
+			JSONObject jsonObject = (JSONObject) send(ORDER_MODULE,
+					ORDER_MODULE_ADD_ORDER, order, null,
+					new HashMap<String, String>() {
+						{
+							put("uid", String.valueOf(Global.user.getUid()));
+						}
+					});
+		
+			if (null != jsonObject) {
+
+				try {
+
+					oid = jsonObject.getLong("oid");
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+
+					e.printStackTrace();
+
+				}
+
+			}
+
+		}
+
+		return oid;
+
+	}
+
+	/**
+	 * @param order
+	 * @return
+	 */
+	public Long addOrder(final Long uid, Order order) {
+
+		Long oid = null;
+
+		if (null != order && null != uid) {
+
+			order.setUid(uid);
+
+			JSONObject jsonObject = (JSONObject) send(ORDER_MODULE,
+					ORDER_MODULE_ADD_ORDER, order, null,
+					new HashMap<String, String>() {
+						{
+							put("uid", String.valueOf(uid));
+						}
+					});
+			if (null != jsonObject) {
+
+				try {
+
+					oid = jsonObject.getLong("oid");
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+
+					e.printStackTrace();
+
+				}
+
+			}
+
+		}
+
+		return oid;
+
+	}
+
+	/**
+	 * @param uid
+	 * @return
+	 */
+	public Order getOrderDetail(final Long oid) {
+
+		Order order = null;
+
+		if (null != oid) {
+
+			order = (Order) load(ORDER_MODULE, ORDER_MODULE_GET_ORDER_BY_OID,
+					Order.class, new HashMap<String, String>() {
+						{
+							put("oid", String.valueOf(oid));
+						}
+					});
+
+		}
+
+		return order;
+
+	}
+
+	/**
+	 * @param uid
+	 * @return
+	 */
+	public String getOrderStatus(final Long oid) {
+
+		String status = null;
+
+		if (null != oid) {
+
+			JSONObject jsonObject = (JSONObject) load(ORDER_MODULE,
+					ORDER_MODULE_GET_ORDER_STATUS_BY_OID, null,
+					new HashMap<String, String>() {
+						{
+							put("oid", String.valueOf(oid));
+						}
+					});
+
+			if (null != jsonObject) {
+
+				try {
+
+					status = jsonObject.getString("status");
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+
+					e.printStackTrace();
+
+				}
+
+			}
+
+		}
+
+		return status;
+
+	}
+
+	/**
+	 * @param oid
+	 * @return
+	 */
+	public boolean confirmOrder(final Long oid) {
+
+		return setOrderStatus(oid, STATUS_CONFITM_ORDER);
+
+	}
+
+	/**
+	 * @param oid
+	 * @return
+	 */
+	public boolean refuseOrder(final Long oid) {
+
+		return setOrderStatus(oid, STATUS_REFUSE_ORDER);
+
+	}
+
+	/**
+	 * @param oid
+	 * @return
+	 */
+	public boolean closeOrder(final Long oid) {
+
+		return setOrderStatus(oid, STATUS_CLOSE_ORDER);
+
+	}
+
+	/**
+	 * @param oid
+	 * @param status
+	 * @return
+	 */
+	public boolean setOrderStatus(final Long oid, String status) {
+
+		boolean result = false;
+
+		if (null != oid && null != status) {
+
+			result = load(ORDER_MODULE, ORDER_MODULE_SET_ORDER_STATUS_BY_OID,
+					new HashMap<String, String>() {
+						{
+							put("oid", String.valueOf(oid));
+						}
+					});
+
+		}
+		return result;
+
+	}
+
+	/**
+	 * @param order
+	 * @return
+	 */
+	public boolean updateOrder(Order order) {
+
+		boolean result = false;
+
+		final Long oid = order.getOid();
+
+		if (null != order && null != oid) {
+
+			result = send(ORDER_MODULE, ORDER_MODULE_UPDATE_ORDER_BY_OID,
+					order, new HashMap<String, String>() {
+						{
+							put("oid", String.valueOf(oid));
+						}
+					});
+
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * @param order
+	 * @return
+	 */
+	public boolean deleteOrder(final Long oid) {
+
+		boolean result = false;
+
+		if (null != oid) {
+
+			result = load(ORDER_MODULE, ORDER_MODULE_DELETE_ORDER_BY_OID,
+					new HashMap<String, String>() {
+						{
+							put("oid", String.valueOf(oid));
+						}
+					});
+
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * @param oid
+	 * @param status
+	 * @return
+	 */
+	public boolean setOrderScore(final Long oid, final int score) {
+
+		boolean result = false;
+
+		if (null != oid && 0 <= score && score <= 100) {
+
+			result = load(ORDER_MODULE, ORDER_MODULE_SET_ORDER_SCORE_BY_OID,
+					new HashMap<String, String>() {
+						{
+							put("oid", String.valueOf(oid));
+							put("socre", String.valueOf(score));
+						}
+					});
+
+		}
+		
+		return result;
+
+	}
+}

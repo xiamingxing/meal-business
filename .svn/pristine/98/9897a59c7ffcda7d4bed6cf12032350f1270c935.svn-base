@@ -1,0 +1,564 @@
+package com.meal.util;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * @author xiamingxing
+ */
+public class HttpUtil {
+
+    public static final String SUCCESS = "1";
+    public static final String FAILURE = "0";
+    public static final int ERR_DOWNLOAD_FILEEXIST = 1;
+    public static final int FAILURE_DOWNLOAD = -1;
+    public static final int SUCCESS_DOWNLOAD = 0;
+
+    static {
+
+        DOMAIN_DEFAULT = "http://182.92.11.204";
+
+        PORT_DEFAULT = ":80/";
+
+        PROJECT_DEFAULT = "web/";
+
+        MODULE_DEFAULT = "";
+
+        ACTION_DEFAULT = "index.php";
+
+        PARAMETERS_DEFAULT = "";
+
+    }
+
+    static {
+
+        DOWNLOAD_PATH_DEFAULT = "";
+
+    }
+
+    static {
+
+        CHARSET_DEFAULT = "utf-8";
+
+        CONNECTION_DEFAULT = "Keep-Alive";
+
+        TIME_OUT_DEFAULT = 10 * 10000000;
+
+        CONTENT_TYPE_DEFAULT = "multipart/form-data";
+
+        BOUNDARY_PREFIX_DEFAULT = "--";
+
+        LINE_END_DEFAULT = "\r\n";
+
+    }
+
+    public static String DOMAIN_DEFAULT;
+    public static String PORT_DEFAULT;
+    public static String PROJECT_DEFAULT;
+    public static String MODULE_DEFAULT;
+    public static String ACTION_DEFAULT;
+    public static String PARAMETERS_DEFAULT;
+    public static String DOWNLOAD_PATH_DEFAULT;
+    public static String CHARSET_DEFAULT;
+    public static String CONNECTION_DEFAULT;
+    public static int TIME_OUT_DEFAULT;
+    public static String CONTENT_TYPE_DEFAULT;
+    public static String BOUNDARY_PREFIX_DEFAULT;
+    public static String LINE_END_DEFAULT;
+
+    /**
+     * @param method
+     * @param module
+     * @param action
+     * @param parameters
+     * @param postData
+     * @return
+     */
+    private static JSONObject _REQUEST(String method, String module,
+                                       String action, String parameters, String postData) {
+
+        String httpURL = getURL(module, action, parameters);
+
+        JSONObject jsonDataArea = null;
+
+        try {
+
+            HttpClient httpClient = new DefaultHttpClient();
+
+            HttpResponse httpResponse;
+
+            if (null != method && method.equals("POST")) {
+
+                HttpPost httpRequest_Post = _getPostRequest(httpURL, postData);
+
+                httpResponse = httpClient.execute(httpRequest_Post);
+
+            } else {
+
+                HttpGet httpRequest_Get = _getGetRequest(httpURL);
+
+                httpResponse = httpClient.execute(httpRequest_Get);
+
+            }
+
+            jsonDataArea = _parserHttpResponse(action, httpResponse);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            ErrUtil.log(action, "EXCEPTION_CONNECT_SERVER");
+
+        }
+
+        return jsonDataArea;
+
+    }
+
+    /**
+     * @param httpURL
+     * @return
+     */
+    private static HttpGet _getGetRequest(String httpURL) {
+
+        HttpGet httpRequest = new HttpGet(httpURL);
+
+        return httpRequest;
+
+    }
+
+    /**
+     * @param httpURL
+     * @param postData
+     * @return
+     */
+    private static HttpPost _getPostRequest(String httpURL, String postData) {
+
+        HttpPost httpRequest = new HttpPost(httpURL);
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new BasicNameValuePair("par", "HttpClient_android_Post"));
+
+        params.add(new BasicNameValuePair("postData", postData));
+
+        HttpEntity httpentity;
+
+        try {
+
+            httpentity = new UrlEncodedFormEntity(params, CHARSET_DEFAULT);
+
+            httpRequest.setEntity(httpentity);
+
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+
+            e.printStackTrace();
+
+        }
+
+        return httpRequest;
+
+    }
+
+    /**
+     * @param module
+     * @param action
+     * @param parameters
+     * @return
+     */
+    public static JSONObject Get(String module, String action, String parameters) {
+
+        return _REQUEST("GET", module, action, parameters, null);
+
+    }
+
+    /**
+     * @param module
+     * @param action
+     * @param parameters
+     * @param postData
+     * @return
+     */
+    public static JSONObject Post(String module, String action,
+                                  String parameters, String postData) {
+
+        return _REQUEST("POST", module, action, parameters, postData);
+
+    }
+
+    /**
+     * @param action
+     * @param httpResponse
+     * @return
+     */
+    private static JSONObject _parserHttpResponse(String action,
+                                                  HttpResponse httpResponse) {
+
+        JSONObject jsonDataArea = null;
+
+        if (null != httpResponse) {
+
+            if (null != httpResponse
+                    && httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+
+                // 取得返回的字符串
+                try {
+
+                    String strResponse = EntityUtils.toString(httpResponse
+                            .getEntity());
+
+                    JSONObject jsonResponse = new JSONObject(strResponse);
+
+                    if (null != jsonResponse
+                            && 0 == jsonResponse.getInt("errno")) {
+
+                        jsonDataArea = jsonResponse.getJSONObject("data");
+
+                    } else {
+
+                        ErrUtil.log(action, "ERR_RESPONSE_DATA");
+
+                    }
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+
+                    ErrUtil.log(action, "EXCEPTION_FORMAT_DATA");
+
+                }
+
+            } else {
+
+                ErrUtil.log(action, "FAIL_CONNECT_SERVER");
+
+            }
+
+        }
+
+        return jsonDataArea;
+
+    }
+
+    /**
+     * @param module
+     * @param parameters
+     * @param file
+     */
+    public static String Upload(String module, String parameters, File file) {
+
+        String httpURL = getURL(module, "upload", parameters);
+
+        return Upload(httpURL, file);
+
+    }
+
+    /**
+     * @param requestURL
+     * @param file
+     * @return
+     */
+    public static String Upload(String requestURL, File file) {
+
+        String fileURL = null;
+
+        String BOUNDARY = UUID.randomUUID().toString();
+
+        try {
+
+            URL httpURL = new URL(requestURL);
+
+            HttpURLConnection conn = (HttpURLConnection) httpURL
+                    .openConnection();
+            {
+                conn.setReadTimeout(TIME_OUT_DEFAULT);
+
+                conn.setConnectTimeout(TIME_OUT_DEFAULT);
+
+                conn.setDoInput(true);
+
+                conn.setDoOutput(true);
+
+                conn.setUseCaches(false);
+
+                conn.setRequestMethod("POST");
+
+                conn.setRequestProperty("Charset", CHARSET_DEFAULT);
+
+                conn.setRequestProperty("Connection", CONNECTION_DEFAULT);
+
+                conn.setRequestProperty("Content-Type", CONTENT_TYPE_DEFAULT
+                        + ";boundary=" + BOUNDARY);
+            }
+
+            if (null != file) {
+
+                OutputStream outputSteam = conn.getOutputStream();
+
+                DataOutputStream out = new DataOutputStream(outputSteam);
+
+                {
+                    StringBuffer buffer = new StringBuffer();
+
+                    buffer.append(BOUNDARY_PREFIX_DEFAULT);
+
+                    buffer.append(BOUNDARY);
+
+                    buffer.append(LINE_END_DEFAULT);
+
+                    buffer.append("Content-Disposition: form-data; name=\"img\"; filename=\""
+                            + file.getName() + "\"" + LINE_END_DEFAULT);
+
+                    buffer.append("Content-Type: application/octet-stream; charset="
+                            + CHARSET_DEFAULT + LINE_END_DEFAULT);
+
+                    buffer.append(LINE_END_DEFAULT);
+
+                    out.write(buffer.toString().getBytes());
+
+                }
+
+                {
+
+                    InputStream in = new FileInputStream(file);
+
+                    byte[] bytes = new byte[1024];
+
+                    int len = 0;
+
+                    while ((len = in.read(bytes)) != -1) {
+
+                        out.write(bytes, 0, len);
+
+                    }
+
+                    in.close();
+
+                }
+
+                {
+
+                    out.write(LINE_END_DEFAULT.getBytes());
+
+                    byte[] end_data = (BOUNDARY_PREFIX_DEFAULT + BOUNDARY
+                            + BOUNDARY_PREFIX_DEFAULT + LINE_END_DEFAULT)
+                            .getBytes();
+
+                    out.write(end_data);
+
+                }
+
+                out.flush();
+
+                int resCode = conn.getResponseCode();
+
+                if (HttpStatus.SC_OK == resCode) {
+
+                    return SUCCESS;
+
+                }
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+        return FAILURE;
+
+    }
+
+    /**
+     * @param requestURL
+     * @return
+     */
+    private static InputStream _getDownLoadInputStream(String requestURL) {
+
+        InputStream in = null;
+
+        try {
+
+            URL httpURL = new URL(requestURL);
+
+            HttpURLConnection conn = (HttpURLConnection) httpURL
+                    .openConnection();
+
+            in = conn.getInputStream();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return in;
+    }
+
+    /**
+     * @param fileName
+     * @param path
+     * @param requestURL
+     * @return
+     */
+    public static int DownLoad(String fileName, String path, String requestURL) {
+
+        if (FileUtils.isFileExist(path + fileName)) {
+
+            return ERR_DOWNLOAD_FILEEXIST;
+
+        } else {
+
+            try {
+
+                InputStream input = null;
+
+                input = _getDownLoadInputStream(requestURL);
+
+                File resultFile = FileUtils.write2SDFromInput(path, fileName,
+                        input);
+
+                if (resultFile == null) {
+
+                    return FAILURE_DOWNLOAD;
+
+                }
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+        return SUCCESS_DOWNLOAD;
+
+    }
+
+    /**
+     * @param requestURL
+     * @return
+     */
+    public static Bitmap DownLoadImage(String requestURL) {
+
+        Bitmap bitmap = null;
+
+        HttpGet httpRequest = new HttpGet(requestURL);
+
+        try {
+
+            HttpClient httpClient = new DefaultHttpClient();
+
+            HttpResponse httpResponse = httpClient.execute(httpRequest);
+
+            if (null != httpResponse
+                    && httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+
+                HttpEntity httpEntity = httpResponse.getEntity();
+
+                InputStream in = httpEntity.getContent();
+
+                bitmap = BitmapFactory.decodeStream(in);
+
+                in.close();
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+        return bitmap;
+
+    }
+
+    /**
+     * @param requestURL
+     * @return
+     */
+    public static String DownLoadTxt(String requestURL) {
+
+        String txtString = null;
+
+        try {
+
+            URL httpURL = new URL(requestURL);
+
+            HttpURLConnection conn = (HttpURLConnection) httpURL
+                    .openConnection();
+
+            InputStream input = conn.getInputStream();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(input));
+
+            String line = null;
+
+            StringBuffer stringBuffer = new StringBuffer();
+
+            while ((line = in.readLine()) != null) {
+
+                stringBuffer.append(line);
+
+            }
+
+            txtString = stringBuffer.toString();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+        return txtString;
+
+    }
+
+    /**
+     * @param module
+     * @param action
+     * @param parameters
+     * @return
+     */
+    public static String getURL(String module, String action, String parameters) {
+
+        String MODULE = (null != module && 0 != module.length()) ? module + "/"
+                : MODULE_DEFAULT;
+
+        String ACTION = (null != action && 0 != action.length()) ? action
+                + ".php" : ACTION_DEFAULT;
+
+        String PARAMETERS = (null != parameters && 0 != parameters.length()) ? ("?" + parameters)
+                : PARAMETERS_DEFAULT;
+
+        String httpURL = MessageFormat.format("{0}{1}{2}{3}{4}{5}{6}",
+                DOMAIN_DEFAULT, PORT_DEFAULT, MODULE_DEFAULT, PROJECT_DEFAULT,
+                MODULE, ACTION, PARAMETERS);
+
+        return httpURL;
+
+    }
+}

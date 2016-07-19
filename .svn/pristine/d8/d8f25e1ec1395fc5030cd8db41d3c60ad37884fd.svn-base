@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#EEEEEC"
+                android:orientation="vertical" >
+    <Button
+            android:id="@+id/registerTop"
+            android:layout_width="fill_parent"
+            android:layout_height="55dip"
+            android:background="#3993CF"
+            android:text="注册"
+            android:textColor="#FFFFFFFF"
+            android:textSize="20dip"
+            android:enabled="false"
+            />
+    <EditText
+            android:hint="  请输入手机号"
+            android:background="#FFFFFFFF"
+            android:id="@+id/customerRegPhoneNum"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/registerTop"
+            android:layout_marginTop="15dip"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:layout_marginBottom="1dp"
+            android:textSize="15dip"
+            android:drawablePadding="10dp"
+            android:inputType="text"
+            android:singleLine="true"
+                        />
+
+    <EditText
+            android:hint="  请输入密码"
+            android:background="#FFFFFFFF"
+            android:id="@+id/customerRegPasswd"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/customerRegPhoneNum"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:layout_marginBottom="1dp"
+            android:textSize="15dip"
+            android:password="true"
+            android:drawablePadding="10dp"
+            android:inputType="text"
+            android:singleLine="true"
+            />
+    <EditText
+            android:hint="  请确认密码"
+            android:background="#FFFFFFFF"
+            android:id="@+id/customerConfirmPasswd"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/customerRegPasswd"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:textSize="15dip"
+            android:password="true"
+            android:drawablePadding="10dp"
+            android:inputType="text"
+            android:singleLine="true"
+            />
+    <Button
+            android:id="@+id/customerRegButton"
+            android:layout_width="fill_parent"
+            android:layout_height="55dip"
+            android:layout_below="@id/customerConfirmPasswd"
+            android:layout_margin="15dip"
+            android:text="注册"
+            android:textSize="20dip"
+            android:textColor="#FFFFFFFF"
+            android:padding="5dip"
+            android:background="#D8584A"
+            />
+
+</RelativeLayout>

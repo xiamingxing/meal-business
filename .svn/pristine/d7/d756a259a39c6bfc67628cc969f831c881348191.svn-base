@@ -1,0 +1,40 @@
+package com.meal.saleactivty;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+
+import com.meal.activity.R;
+
+public class RegisterActivity extends Activity {
+	
+	
+	Button registerButton; 
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.saleregist);
+		
+		registerButton=(Button)findViewById(R.id.registerButton);
+
+		registerButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				AlertDialog alert=new AlertDialog.Builder(RegisterActivity.this).create();
+				alert.setMessage("注册成功，请等待管理员确认");
+				alert.show();
+				
+			}
+		});
+	}
+	
+
+}

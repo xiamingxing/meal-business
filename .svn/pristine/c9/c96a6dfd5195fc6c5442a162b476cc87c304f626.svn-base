@@ -1,0 +1,9 @@
+package com.meal.activity.common;
+
+import android.os.Message;
+
+public interface AsynThreadImpl {
+	
+	public Message excute();
+
+}

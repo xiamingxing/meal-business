@@ -1,0 +1,9 @@
+package com.meal.bean;
+
+public class Global {
+
+	public static User user = null;
+	
+	public static Seller seller = null;
+
+}

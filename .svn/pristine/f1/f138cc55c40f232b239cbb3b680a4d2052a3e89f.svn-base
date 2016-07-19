@@ -1,0 +1,93 @@
+package com.meal.saleactivty;
+
+import com.meal.activity.R;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class SaleInfoActivity extends Activity{
+
+	Button acceptButton;
+	Button closeButton;
+	Button orderListButton;
+
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		
+		setContentView(R.layout.saleinfo);
+		
+		//获取商户信息，名称和ID
+		TextView textView1=(TextView)findViewById(R.id.salesInfo);
+		//获取商户信息，地址和电话
+		TextView textView2=(TextView)findViewById(R.id.salesAddress);
+		//读取显示
+		
+		 acceptButton=(Button)findViewById(R.id.acceptButton);
+		 closeButton=(Button)findViewById(R.id.closeButton);
+		 orderListButton=(Button)findViewById(R.id.orderListButton);
+		
+		
+		//上传商品接口
+		Button uploadButton=(Button)findViewById(R.id.uploadButton);
+		uploadButton.setOnClickListener(new OnClickListener() {
+						
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		//修改商品接口
+		Button changeButton=(Button)findViewById(R.id.changeButton);
+		changeButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		
+	//商家接单开关
+
+	    acceptButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				acceptButton.setVisibility(View.INVISIBLE);
+				closeButton.setVisibility(View.VISIBLE);
+				orderListButton.setVisibility(View.VISIBLE);
+				
+				}
+		});
+	    
+	    //按查看订单列表按钮跳转
+	    orderListButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//跳转到订单信息页面
+				Intent intent=new Intent();
+				intent.setClass(SaleInfoActivity.this,SaleOrderList.class);
+				startActivity(intent);
+				
+			}
+		});
+		
+		
+	}
+	
+
+}

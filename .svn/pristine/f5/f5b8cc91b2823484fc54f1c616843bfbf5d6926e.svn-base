@@ -1,0 +1,55 @@
+package com.meal.saleactivty;
+
+import com.meal.activity.R;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class SaleLoginActivity extends Activity{
+	
+
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		
+		setContentView(R.layout.salelogin);
+	    Button loginButton=(Button)findViewById(R.id.loginButton);
+	    TextView textView=(TextView)findViewById(R.id.registerGo);		
+	    
+		loginButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//跳转到商户信息页面
+				Intent intent=new Intent();
+				intent.setClass(SaleLoginActivity.this,SaleInfoActivity.class);
+				startActivity(intent);
+
+			
+			}
+		});
+		
+		textView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//跳转到注册页面
+				
+				Intent intent=new Intent();
+				intent.setClass(SaleLoginActivity.this,RegisterActivity.class);
+				startActivity(intent);
+				
+			}
+		});
+	}
+
+}

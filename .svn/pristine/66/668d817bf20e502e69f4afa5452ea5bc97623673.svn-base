@@ -1,0 +1,116 @@
+package com.meal.util;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONObject;
+
+public class JSONFactoryUtil {
+
+    /**
+     * @param Object
+     * @return
+     */
+    public static String parserToJsonString(Object javaBeanObject) {
+
+        String jsonString = null;
+
+        if (null != javaBeanObject) {
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            try {
+
+                jsonString = objectMapper.writeValueAsString(javaBeanObject);
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+        return jsonString;
+
+    }
+
+    /**
+     * @param Object
+     * @return
+     */
+    public static JSONObject parserToJsonObject(Object javaBeanObject) {
+
+        JSONObject jsonObject = null;
+
+        String jsonString = null;
+
+        if (null != javaBeanObject) {
+
+            if (!(javaBeanObject instanceof String)) {
+
+                jsonString = parserToJsonString(javaBeanObject);
+
+            }
+
+            try {
+
+                jsonObject = new JSONObject(jsonString);
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+        return jsonObject;
+
+    }
+
+    /**
+     * @param jsonData
+     * @param targetCls
+     * @return
+     */
+    public static Object parserToJavaBeanObject(Object jsonData,
+                                                Class<?> targetCls) {
+
+        String jsonString = null;
+
+        Object javaBeanObject = null;
+
+        if (null != jsonData && null != targetCls) {
+
+            if (jsonData instanceof JSONObject) {
+
+                jsonString = jsonData.toString();
+
+            } else if (jsonData instanceof String) {
+
+                jsonString = (String) jsonData;
+
+            } else {
+
+                return null;
+
+            }
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            try {
+
+                javaBeanObject = objectMapper.readValue(jsonString, targetCls);
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+        return javaBeanObject;
+
+    }
+
+}

@@ -1,0 +1,167 @@
+package com.meal.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.os.Message;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.meal.activity.ipml.AsynThreadImpl;
+import com.meal.activity.ipml.UIThreadImpl;
+import com.meal.util.HttpUtil;
+
+public class AddGoodslistActivity extends BaseActivity {
+	
+	ListView goodsList;
+	ImageView goodsImage;
+	TextView goodsName;
+	TextView numText;
+	Button moneyButton;
+	Button storeBuyBegin;
+	
+	private AlertDialog dialog;
+	
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.goods_activity);
+        initWidget();
+//        initial();
+//        startAsynThread("send");
+    }
+	
+	private void initial() {
+		// TODO Auto-generated constructor stub
+		
+		setUIRefreshConfig(new UIThreadImpl(){
+			@Override
+			public void refresh(Message msg) {
+				// TODO Auto-generated method stub	
+			}
+		});
+		
+		setAsynThreadConfig("send", true, new AsynThreadImpl() {
+
+			@Override
+			public Message excute() {
+				// TODO Auto-generated method stub
+				Message msg = Message.obtain();
+				try{
+					System.out.print(HttpUtil.Get("", "", ""));
+				}
+				catch(Exception e){
+					
+					e.printStackTrace();
+					
+				}
+				
+				return null;
+			}
+			
+		});
+		
+	}
+	private void initWidget()
+	{
+		goodsList = (ListView)findViewById(R.id.goodsList);
+		goodsImage = (ImageView)findViewById(R.id.goodsImage);
+		goodsName = (TextView)findViewById(R.id.goodsName);
+		numText = (TextView)findViewById(R.id.numText);
+		moneyButton = (Button)findViewById(R.id.moneyButton);
+		storeBuyBegin = (Button)findViewById(R.id.storeBuyBegin);
+		
+		storeBuyBegin.setText("加入");
+		
+		storeBuyBegin.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dialog = new AlertDialog.Builder(AddGoodslistActivity.this).create();
+				dialog.show();
+				dialog.setContentView(R.layout.wait);
+			}
+		});
+		
+		fakeListItemCreate();//演示专用
+	}
+	private void fakeListItemCreate()
+	{
+		SimpleAdapter adapter = new SimpleAdapter(this,getData(),R.layout.goodslistitem,
+				new String[]{"img","goodsname","numtext","moneybutton"},
+				new int[]{R.id.goodsImage,R.id.goodsName,R.id.numText,R.id.moneyButton});
+		goodsList.setAdapter(adapter);
+		goodsList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+			}
+		});
+	}
+
+	private List<Map<String, Object>> getData()
+	{
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("img", R.drawable.yangleduo);
+		map.put("goodsname", "养乐多");
+		map.put("numtext", "1");
+		map.put("moneybutton", "￥10");
+		list.add(map);
+
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.qiaqia);
+		map.put("goodsname", "恰恰香瓜子");
+		map.put("numtext", "1");
+		map.put("moneybutton", "￥6.5");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.dabaitu);
+		map.put("goodsname", "大白兔奶糖");
+		map.put("numtext", "1");
+		map.put("moneybutton", "￥8.5");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.fengzhua);
+		map.put("goodsname", "泡椒凤爪");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥6");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.leshi);
+		map.put("goodsname", "乐事薯片");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥6");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.wangzai);
+		map.put("goodsname", "旺仔牛奶");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥5");
+		list.add(map);
+		
+		return list;
+		
+	}
+}

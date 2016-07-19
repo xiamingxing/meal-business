@@ -1,0 +1,144 @@
+package com.meal.action;
+
+import java.util.HashMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.meal.bean.Global;
+import com.meal.bean.User;
+
+public class UserManageAction extends BaseAction {
+
+	private String USER_MODULE;
+
+	private String USER_MODULE_LOGIN;
+
+	private String USER_MODULE_LOGOUT;
+
+	private String USER_MODULE_REGISTER;
+
+	public UserManageAction() {
+
+		this.USER_MODULE = Global.USER_MODULE;
+
+		this.USER_MODULE_LOGIN = Global.USER_MODULE_LOGIN;
+
+		this.USER_MODULE_LOGOUT = Global.USER_MODULE_LOGOUT;
+
+		this.USER_MODULE_REGISTER = Global.USER_MODULE_REGISTER;
+
+	}
+
+	/**
+	 * @param userName
+	 * @param passWord
+	 * @return
+	 */
+	public User login(final String userName, final String passWord) {
+
+		User user = null;
+
+		if (null != userName && null != passWord) {
+
+			user = (User) load(USER_MODULE, USER_MODULE_LOGIN, User.class,
+					new HashMap<String, String>() {
+						{
+
+							put("userName", userName);
+							put("passWord", passWord);
+
+						}
+					});
+
+			Global.user = user;
+
+		}
+
+		return user;
+
+	}
+
+	/**
+	 * @return
+	 */
+	public User freeLogin() {
+
+		User user = null;
+
+		if (null != Global.user) {
+
+			user = login(Global.user.getName(), Global.user.getPassWord());
+
+			Global.user = user;
+
+		}
+
+		return user;
+
+	}
+
+	/**
+	 * 
+	 */
+	public void logout() {
+
+		final String uid = String.valueOf(Global.user.getUid());
+
+		load(USER_MODULE, USER_MODULE_LOGOUT, User.class,
+				new HashMap<String, String>() {
+					{
+
+						put("uid", uid);
+
+					}
+				});
+		Global.user = null;
+
+	}
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	public boolean register(User user) {
+		
+		boolean result = false;
+
+		if (null != user) {
+
+			JSONObject jsonData = (JSONObject) send(USER_MODULE, USER_MODULE_REGISTER,
+					user, null, null);
+			
+			if (null != jsonData) {
+
+				try {
+					
+					Long uid = jsonData.getLong("uid");
+					
+					if ( null != uid && null != Global.user ){
+						
+						user.setUid(uid);
+						
+						Global.user = user;
+						
+						result = true;
+						
+					}
+					
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					
+					e.printStackTrace();
+					
+				}
+
+			}
+
+		}
+		
+		return result;
+
+	}
+
+}

@@ -1,0 +1,143 @@
+package com.meal.activity;
+
+import android.os.Bundle;
+import android.os.Message;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.meal.activity.ipml.AsynThreadImpl;
+import com.meal.activity.ipml.UIThreadImpl;
+import com.meal.bean.User;
+import com.meal.util.GestureListenerImpl;
+import com.meal.util.HttpUtil;
+import com.meal.util.JSONFactoryUtil;
+import com.meal.util.ParamsFactory;
+import com.meal.util.ViewUtil;
+
+public class TestActivity extends BaseActivity {
+
+	protected void onCreate(Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.main);
+
+
+		
+//		View test = findViewById(R.id.test);
+//
+//		final TextView text = (TextView) findViewById(R.id.text);
+//
+//		ViewUtil.addGestureListener(test, new GestureListenerImpl() {
+//
+//
+//			@Override
+//			public void UpAction(double distance, double viewWidth,
+//					double viewHeight) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public void UpLeftAction(double distance, double viewWidth,
+//					double viewHeight) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public void LeftAction(double distance, double viewWidth,
+//					double viewHeight) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public void DownLeftAction(double distance, double viewWidth,
+//					double viewHeight) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public void DownAction(double distance, double viewWidth,
+//					double viewHeight) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public void DownRightAction(double distance, double viewWidth,
+//					double viewHeight) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public void RightAction(double distance, double viewWidth,
+//					double viewHeight) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public void UpRightAction(double distance, double viewWidth,
+//					double viewHeight) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//		});
+
+		initial();
+
+		startAsynThread("send");
+
+	}
+
+	private void initial() {
+		// TODO Auto-generated constructor stub
+
+        EditText edt_passWord = (EditText) findViewById(R.id.editText_passWord);
+
+        EditText edt_userName = (EditText) findViewById(R.id.editText_userName);
+
+        TextView text_warning = (TextView) findViewById(R.id.text_warning);
+
+        Button btn_submit = (Button) findViewById(R.id.btn_submit);
+
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+            }
+        });
+
+		setUIRefreshConfig(new UIThreadImpl() {
+            @Override
+            public void refresh(Message msg) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+		setAsynThreadConfig("send", true, new AsynThreadImpl() {
+
+			@Override
+			public Message excute() {
+				// TODO Auto-generated method stub
+				Message msg = Message.obtain();
+
+				finishAsynThread("send");
+
+
+				return null;
+			}
+
+		});
+
+	}
+}

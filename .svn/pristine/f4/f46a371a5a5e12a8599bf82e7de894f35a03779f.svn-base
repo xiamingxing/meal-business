@@ -1,0 +1,221 @@
+package com.meal.util;
+
+import java.net.URLEncoder;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+public class HttpUtil {
+
+	public static String DOMAIN_DEFAULT;
+
+	public static String PORT_DEFAULT;
+
+	public static String PROJECT_DEFAULT;
+
+	public static String MODULE_DEFAULT;
+
+	public static String ACTION_DEFAULT;
+
+	public static String PARAMETERS_DEFAULT;
+
+	static {
+
+		DOMAIN_DEFAULT = "http://182.92.11.204";
+
+		PORT_DEFAULT = ":80/";
+
+		PROJECT_DEFAULT = "";
+
+		MODULE_DEFAULT = "";
+
+		ACTION_DEFAULT = "index.php";
+
+		PARAMETERS_DEFAULT = "";
+
+	}
+
+	/**
+	 * @param module
+	 * @param action
+	 * @param parameters
+	 * @return
+	 */
+	public static JSONObject Get(String module, String action, String parameters) {
+
+		String httpURL = getURL(module, action, parameters);
+
+		JSONObject jsonDataArea = null;
+
+		try {
+
+			HttpGet httpRequest = new HttpGet(httpURL);
+
+			HttpClient httpClient = new DefaultHttpClient();
+
+			HttpResponse httpResponse = httpClient.execute(httpRequest);
+
+			if (null != httpResponse
+					&& httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+
+				// 取得返回的字符串
+				String strResponse = EntityUtils.toString(httpResponse
+						.getEntity());
+
+				try {
+
+					JSONObject jsonResponse = new JSONObject(strResponse);
+
+					if (null != jsonResponse
+							&& 0 == jsonResponse.getInt("errno")) {
+
+						jsonDataArea = jsonResponse.getJSONObject("data");
+
+					} else {
+
+						ErrUtil.log(action, "ERR_RESPONSE_DATA");
+
+					}
+				} catch (Exception e) {
+
+					e.printStackTrace();
+
+					ErrUtil.log(action, "EXCEPTION_FORMAT_DATA");
+
+				}
+
+			} else {
+
+				ErrUtil.log(action, "FAIL_CONNECT_SERVER");
+
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+			ErrUtil.log(action, "EXCEPTION_CONNECT_SERVER");
+
+		}
+
+		return jsonDataArea;
+
+	}
+
+	/**
+	 * @param module
+	 * @param action
+	 * @param parameters
+	 * @param postData
+	 * @return
+	 */
+	public static JSONObject Post(String module, String action,
+			String parameters, String postData) {
+
+		String httpURL = getURL(module, action, parameters);
+
+		JSONObject jsonDataArea = null;
+
+		try {
+
+			HttpPost httpRequest = new HttpPost(httpURL);
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+			params.add(new BasicNameValuePair("par", "HttpClient_android_Post"));
+
+			params.add(new BasicNameValuePair("postData", postData));
+
+			HttpEntity httpentity = new UrlEncodedFormEntity(params, "utf-8");
+
+			httpRequest.setEntity(httpentity);
+
+			HttpClient httpClient = new DefaultHttpClient();
+
+			HttpResponse httpResponse = httpClient.execute(httpRequest);
+
+			if (null != httpResponse
+					&& httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+
+				// 取得返回的字符串
+				String strResponse = EntityUtils.toString(httpResponse
+						.getEntity());
+
+				try {
+
+					JSONObject jsonResponse = new JSONObject(strResponse);
+
+					if (null != jsonResponse
+							&& 0 == jsonResponse.getInt("errno")) {
+
+						jsonDataArea = jsonResponse.getJSONObject("data");
+
+					} else {
+
+						ErrUtil.log(action, "ERR_RESPONSE_DATA");
+
+					}
+				} catch (Exception e) {
+
+					e.printStackTrace();
+
+					ErrUtil.log(action, "EXCEPTION_FORMAT_DATA");
+
+				}
+
+			} else {
+
+				ErrUtil.log(action, "FAIL_CONNECT_SERVER");
+
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+			ErrUtil.log(action, "EXCEPTION_CONNECT_SERVER");
+
+		}
+
+		return jsonDataArea;
+
+	}
+
+	/**
+	 * @param module
+	 * @param action
+	 * @param parameters
+	 * @return
+	 */
+	public static String getURL(String module, String action, String parameters) {
+
+		String MODULE = (null != module && 0 != module.length()) ? module + "/"
+				: MODULE_DEFAULT;
+
+		String ACTION = (null != action && 0 != action.length()) ? action
+				+ ".php" : ACTION_DEFAULT;
+
+		String PARAMETERS = (null != parameters && 0 != parameters.length()) ? ("?" + parameters)
+				: PARAMETERS_DEFAULT;
+
+		String httpURL = MessageFormat.format("{0}{1}{2}{3}{4}{5}{6}",
+				PROJECT_DEFAULT, DOMAIN_DEFAULT, PORT_DEFAULT, MODULE_DEFAULT,
+				MODULE, ACTION, PARAMETERS);
+
+		return httpURL;
+
+	}
+}

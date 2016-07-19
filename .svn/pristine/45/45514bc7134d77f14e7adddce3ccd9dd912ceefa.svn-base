@@ -1,0 +1,7 @@
+package com.meal.action;
+
+public class UserManageAction extends BaseAction{
+
+	
+	
+}

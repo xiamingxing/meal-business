@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+                            android:background="@color/bg" >
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="55dip"
+            android:background="@color/headblue">
+        <ImageButton
+                android:id="@+id/detailReturnButton"
+                android:src="@drawable/retbutton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"/>
+        <TextView
+                android:id="@+id/fileText"
+                android:text="订单详情"
+                android:background="@color/headblue"
+                android:layout_width="fill_parent"
+                android:layout_height="55dip"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="150dp"
+                android:layout_marginTop="20dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"/>
+    </RelativeLayout>
+
+
+    <ListView
+            android:id="@+id/orderList"
+             android:layout_weight="5"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            />
+    <LinearLayout 
+         android:layout_width="fill_parent"
+	     android:layout_height="wrap_content"
+	     android:layout_weight="1"
+	      android:orientation="horizontal">
+            <Button
+            android:id="@+id/acceptSaleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="45dip"
+            android:layout_marginLeft="55dip"
+            android:text="接受订单"
+
+            android:textSize="18dip"
+            android:textColor="#FFFFFFFF"
+            android:padding="5dip"
+            android:background="@color/buttonColor"
+            />
+           <Button
+            android:id="@+id/returnSaleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="45dip"
+            android:layout_marginLeft="90dip"
+            android:text="缺货返回"
+
+            android:textSize="18dip"
+            android:textColor="#FFFFFFFF" 
+            android:padding="5dip"
+            android:background="@color/buttonColor"
+            />
+        
+    </LinearLayout>
+
+</LinearLayout>

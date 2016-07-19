@@ -1,0 +1,151 @@
+package com.meal.bean;
+
+import java.util.ArrayList;
+
+import android.graphics.Bitmap;
+
+public class User {
+
+	private long uid;
+
+	private String name;
+
+	private String passWord;
+
+	private String portrait;
+
+	private String phone;
+
+	private String address;
+
+	private ArrayList<Long> orderList;
+
+	private ArrayList<Long> messageList;
+
+	public User() {
+
+		this.uid = 1000l;
+
+		this.name = "defaultUser";
+
+		this.passWord = "123456";
+
+		this.portrait = null;
+
+		this.phone = "18010000000";
+
+		this.address = "北京市XX区XX路X号X大厦X楼XXX";
+
+		this.orderList = new ArrayList<Long>() {
+			{
+				add(1002l);
+				add(1003l);
+				add(1004l);
+				add(1005l);
+				add(1006l);
+				add(1007l);
+
+			}
+		};
+
+		this.messageList = new ArrayList<Long>() {
+			{
+				add(1002l);
+				add(1003l);
+				add(1004l);
+				add(1005l);
+				add(1006l);
+				add(1007l);
+
+			}
+		};
+
+	}
+
+	public User(long uid, String name, String passWord, String portrait,
+			String phone, String address, ArrayList<Long> orderList,
+			ArrayList<Long> messageList) {
+
+		this.uid = uid;
+
+		this.name = name;
+
+		this.passWord = passWord;
+
+		this.portrait = portrait;
+
+		this.phone = phone;
+
+		this.address = address;
+
+		this.orderList = orderList;
+
+		this.messageList = messageList;
+
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPassWord() {
+		return passWord;
+	}
+
+	public void setPassWord(String passWord) {
+		this.passWord = passWord;
+	}
+
+	public String getPortrait() {
+		return portrait;
+	}
+
+	public void setPortrait(String portrait) {
+		this.portrait = portrait;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public ArrayList<Long> getOrderList() {
+		return orderList;
+	}
+
+	public void setOrderList(ArrayList<Long> orderList) {
+		this.orderList = orderList;
+	}
+
+	public ArrayList<Long> getMessageList() {
+		return messageList;
+	}
+
+	public void setMessageList(ArrayList<Long> messageList) {
+		this.messageList = messageList;
+	}
+
+	public long getUid() {
+		return uid;
+	}
+
+	public void setUid(long uid) {
+		this.uid = uid;
+	}
+
+}

@@ -1,0 +1,69 @@
+package com.meal.action;
+
+import java.util.HashMap;
+
+import com.meal.bean.Global;
+import com.meal.bean.User;
+
+public class UserManageAction extends BaseAction {
+
+	private String USER_MODULE;
+
+	private String USER_MODULE_LOGIN;
+
+	public UserManageAction() {
+
+		this.USER_MODULE = Global.USER_MODULE;
+
+		this.USER_MODULE_LOGIN = Global.USER_MODULE_LOGIN;
+
+	}
+
+	/**
+	 * @param userName
+	 * @param passWord
+	 * @return
+	 */
+	public User login(final String userName, final String passWord) {
+
+		User user = null;
+
+		if (null != userName && null != passWord) {
+
+			user = (User) load(USER_MODULE, USER_MODULE_LOGIN, User.class,
+					new HashMap<String, String>() {
+						{
+
+							put("userName", userName);
+							put("passWord", passWord);
+
+						}
+					});
+
+			Global.user = user;
+
+		}
+
+		return user;
+
+	}
+
+	/**
+	 * @return
+	 */
+	public User freeLogin(){
+		
+		User user = null;
+		
+		if ( null != Global.user ){
+			
+			user = login(Global.user.getName(), Global.user.getPassWord());
+			
+			Global.user = user;
+			
+		}
+
+		return user;
+		
+	}
+}

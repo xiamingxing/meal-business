@@ -1,0 +1,32 @@
+package com.meal.bean;
+
+public class Global {
+
+	public static User user = null;
+	
+	public static final String USER_MODULE = "UserManageService";
+	
+		public static final String USER_MODULE_LOGIN = "login";
+		
+		public static final String USER_MODULE_LOGOUT = "logout";
+		
+		public static final String USER_MODULE_REGISTER = "register";
+		
+		public static final String USER_MODULE_GET_USER_INFO = "getUserInfo";
+		
+		public static final String USER_MODULE_UPDATE_USER_INFO = "updateUserInfo";
+		
+	public static final String SELLER_MODULE = "SellerManageService";
+		
+		public static final String SELLER_MODULE_LOGIN = "login";
+		
+		public static final String SELLER_MODULE_LOGOUT = "logout";
+		
+		public static final String SELLER_MODULE_REGISTER = "register";
+		
+		public static final String SELLER_MODULE_GET_USER_INFO = "getUserInfo";
+		
+		public static final String SELLER_MODULE_UPDATE_USER_INFO = "updateUserInfo";
+		
+	
+}

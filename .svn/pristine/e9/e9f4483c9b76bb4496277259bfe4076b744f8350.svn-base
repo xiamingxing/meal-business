@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="app_name">Meal</string>
+    <string name="headtext">我爱凑单</string>
+    <string name="storebuybegintext">发起凑单</string>
+    <string name="storebuyaddtext">加入</string>
+    <string name="mynowbuytext">我正在发起的凑单</string>
+    <string name="mynowaddtext">我正在参与的凑单</string>
+    <string name="waittext">凑单等待时长</string>
+    <string name="begin">开始凑单</string>
+    <string name="cancel">取消</string>
+    <string name="commit">提交凑单</string>
+    <string name="findother">找人凑单</string>
+</resources>

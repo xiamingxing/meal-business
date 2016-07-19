@@ -1,0 +1,9 @@
+package com.meal.util;
+
+public interface CallBackForDialogBtn {
+
+	public void confirm();
+
+	public void cancel();
+
+}

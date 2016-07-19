@@ -1,0 +1,116 @@
+package com.meal.saleactivty;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
+import com.meal.activity.R;
+
+public class SaleOrderInfo extends Activity{
+	
+	ListView detailList;
+	Button acceptSaleButton;
+	Button returnSaleButton;
+	ImageButton detailReturnButton;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		
+		setContentView(R.layout.orderdetail);
+		
+		detailList=(ListView)findViewById(R.id.orderList);
+		ArrayList<HashMap<String,Object>> listItem= new ArrayList<HashMap<String,Object>>();
+		SimpleAdapter adapter = new SimpleAdapter(this,getData(),R.layout.orderdetail_row,
+		new String[]{"goodSaleImage","goodSaleName","goodSalePrice","goodSaleNum"},
+		new int[]{R.id.goodSaleImage,R.id.goodSaleName,R.id.goodSalePrice,R.id.goodSaleNum});
+		detailList.setAdapter(adapter);
+//		detailList.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				// TODO Auto-generated method stub
+//			}
+//		});
+		
+		acceptSaleButton = (Button)findViewById(R.id.acceptSaleButton);
+		acceptSaleButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+//				AlertDialog alert=new AlertDialog.Builder(SaleOrderInfo.this).create();
+//				alert.setMessage("确认接单，直接推送发货通知");
+//				alert.show();
+				Toast.makeText(SaleOrderInfo.this, "确认接单，直接推送发货通知", Toast.LENGTH_LONG).show();
+			}
+		});
+		
+		
+		returnSaleButton = (Button)findViewById(R.id.returnSaleButton);
+		returnSaleButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent=new Intent();
+				intent.setClass(SaleOrderInfo.this,SaleOrderList.class);
+				startActivity(intent);
+			}
+		});
+		
+		detailReturnButton=(ImageButton)findViewById(R.id.detailReturnButton);
+		detailReturnButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				Intent intent=new Intent();
+				intent.setClass(SaleOrderInfo.this,SaleOrderList.class);
+				startActivity(intent);
+			}
+		});
+
+	}
+	
+	
+	//资源
+	private List<Map<String, Object>> getData()
+	{
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("goodSaleImage", R.drawable.saleleshi);
+		map.put("goodSaleName", "乐事薯片");
+		map.put("goodSalePrice", "单价：5");
+		map.put("goodSaleNum", "数量：1");
+		
+		list.add(map);
+
+		map = new HashMap<String, Object>();
+		map.put("goodSaleImage", R.drawable.saleqiaqia);
+		map.put("goodSaleName", "恰恰瓜子");
+		map.put("goodSalePrice", "单价：7");
+		map.put("goodSaleNum", "数量：2");
+		list.add(map);
+		
+
+		return list;
+	}
+}

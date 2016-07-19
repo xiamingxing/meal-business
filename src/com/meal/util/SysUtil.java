@@ -1,0 +1,32 @@
+package com.meal.util;
+
+import android.text.format.Time;
+
+/**
+ * @author xiamingxing
+ *
+ */
+public class SysUtil {
+
+    /**
+     * @return
+     */
+    public static String getTime() {
+
+        Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料。
+        
+        t.setToNow(); // 取得系统时间。
+
+        String year = String.valueOf(t.year);
+        String month = String.valueOf(t.month);
+        String date = String.valueOf(t.monthDay);
+        String hour = String.valueOf(t.hour); // 0-23
+        String minute = String.valueOf(t.minute);
+        String second = String.valueOf(t.second);
+
+        return year + "-" + month + "-" + date + " " + hour + ":" + minute
+                + ":" + second + " ";
+
+    }
+
+}

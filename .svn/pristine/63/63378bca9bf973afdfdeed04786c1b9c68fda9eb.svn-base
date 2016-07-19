@@ -1,0 +1,289 @@
+package com.meal.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.meal.activity.AddGoodslistActivity.MyAdapter;
+import com.meal.activity.AddGoodslistActivity.ViewHolder;
+import com.meal.activity.ipml.AsynThreadImpl;
+import com.meal.activity.ipml.UIThreadImpl;
+import com.meal.util.DialogUtil;
+import com.meal.util.HttpUtil;
+
+public class GoodslistActivity extends BaseActivity {
+	
+	List<Map<String, Object>> dataList;
+	HashMap<Button, TextView> temp = new HashMap<Button, TextView>();
+	
+	ListView goodsList;
+	ImageView goodsImage;
+	TextView goodsName;
+	Button moneyButton;
+	Button storeBuyBegin;
+	Button retButton;
+	Spinner timeSpin;
+	TextView totalNum;
+	
+	private AlertDialog dialog;
+	
+	private ArrayAdapter<String> spinadapter;
+	private List<String> spinlist = new ArrayList<String>();
+	
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.goods_activity);
+        initWidget();
+//        initial();
+//        startAsynThread("send");
+    }
+	
+	
+	private void initWidget()
+	{
+		goodsList = (ListView)findViewById(R.id.goodsList);
+		totalNum = (TextView)findViewById(R.id.totalNum);
+		
+		retButton = (Button)findViewById(R.id.retButton1);
+		retButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				GoodslistActivity.this.finish();
+			}
+		});
+		
+		storeBuyBegin = (Button)findViewById(R.id.storeBuyBegin);
+		
+		storeBuyBegin.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dialog = new AlertDialog.Builder(GoodslistActivity.this).create();
+				dialog.show();
+				dialog.setContentView(R.layout.wait);
+				timeSpin = (Spinner)dialog.findViewById(R.id.timeSpin);
+				spinlist.add("15分钟");
+				spinlist.add("30分钟");
+				spinlist.add("1个小时");
+				spinlist.add("2个小时");
+				spinadapter = new ArrayAdapter<String>(GoodslistActivity.this,android.R.layout.simple_spinner_item, spinlist);
+				spinadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+				timeSpin.setAdapter(spinadapter);
+//				timeSpin.setOnItemClickListener(new OnItemClickListener() {
+//
+//					@Override
+//					public void onItemClick(AdapterView<?> parent, View view,
+//							int position, long id) {
+//						// TODO Auto-generated method stub
+//						
+//					}
+//				});
+				Button yesButton = (Button)dialog.findViewById(R.id.beginButton);
+				Button cancelButton = (Button)dialog.findViewById(R.id.cancelButton);
+				yesButton.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent();
+						intent.setClass(GoodslistActivity.this, AllOrderActivity.class);
+						startActivity(intent);
+					}
+				});
+				cancelButton.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+					}
+				});
+			}
+		});
+		
+		fakeListItemCreate();//演示专用
+	}
+	private void fakeListItemCreate()
+	{
+		goodsList = (ListView) findViewById(R.id.goodsList);
+		
+		final MyAdapter myAdapter = new MyAdapter(this);
+		
+		dataList = getData();
+		
+		goodsList.setAdapter(myAdapter);
+	}
+
+	private List<Map<String, Object>> getData()
+	{
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("img", R.drawable.yangleduo);
+		map.put("goodsname", "养乐多");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥10");
+		list.add(map);
+
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.qiaqia);
+		map.put("goodsname", "恰恰香瓜子");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥6.5");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.dabaitu);
+		map.put("goodsname", "大白兔奶糖");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥8.5");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.fengzhua);
+		map.put("goodsname", "泡椒凤爪");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥6");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.leshi);
+		map.put("goodsname", "乐事薯片");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥6");
+		list.add(map);
+		
+		map = new HashMap<String, Object>();
+		map.put("img", R.drawable.wangzai);
+		map.put("goodsname", "旺仔牛奶");
+		map.put("numtext", "");
+		map.put("moneybutton", "￥5");
+		list.add(map);
+		
+		return list;
+		
+	}
+	public final class ViewHolder 
+	{
+		ImageView goodsImage;
+		TextView goodsName;
+		TextView numText;
+		Button moneyButton;
+	}	
+    
+	
+	public class MyAdapter extends BaseAdapter
+	{
+
+		private LayoutInflater mInflater;
+
+		public MyAdapter(Context context) 
+		{
+			this.mInflater = LayoutInflater.from(context);
+		}
+
+		//@Override
+		public int getCount() 
+		{
+			// TODO Auto-generated method stub
+			return dataList.size();
+		}
+
+		//@Override
+		public Object getItem(int arg0) 
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		//@Override
+		public long getItemId(int arg0) 
+		{
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		//@Override
+		public View getView(int position, View convertView, ViewGroup parent) 
+		{
+			
+			HashMap<String, Object> viewItem = (HashMap<String, Object>) dataList.get(position); 
+
+			ViewHolder holder = null;
+
+			if (convertView == null) 
+			{
+				convertView = mInflater.inflate(R.layout.goodslistitem, null);
+				holder = new ViewHolder();
+				holder.goodsImage = (ImageView) convertView.findViewById(R.id.goodsImage);
+				holder.goodsName = (TextView) convertView.findViewById(R.id.goodsName);
+				holder.numText = (TextView) convertView.findViewById(R.id.numText);
+				holder.moneyButton = (Button) convertView.findViewById(R.id.moneyButton);
+				convertView.setTag(holder);
+
+			} else 
+			{
+
+				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			String tempString = viewItem.get("img").toString();
+			
+			Integer tempInteger = Integer.valueOf(tempString);
+			
+			holder.goodsImage.setBackgroundResource(tempInteger);
+			holder.goodsName.setText((CharSequence) viewItem.get("goodsname"));
+			holder.numText.setText((CharSequence) viewItem.get("numtext"));
+			holder.moneyButton.setText((CharSequence) viewItem.get("moneybutton"));
+			temp.put(holder.moneyButton, holder.numText);
+			holder.moneyButton.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					totalNum.getText();
+					TextView t = temp.get(v);
+					String x = t.getText().toString();
+					Integer y = Integer.parseInt(x == "" ? "0" : x);
+					y = y + 1;
+					String z = String.valueOf(y);
+					String x2 = totalNum.getText().toString();
+					Integer y2 = Integer.parseInt(x2 == ""?"0": x2);
+					y2 = y2 + 1;
+					String z2 = String.valueOf(y2);
+					totalNum.setText(z2);
+					t.setText(z);
+//					DialogUtil.alert(totalNum.getText().toString() + t.getText(), GoodslistActivity.this);
+//					totalNum.setText(totalNum.getText()+"1");
+//					numText.setText(numText.getText()+"1");
+				}
+			});
+
+			return convertView;
+		}
+
+	}
+}

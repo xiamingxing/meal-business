@@ -1,0 +1,136 @@
+package com.meal.action;
+
+import java.util.HashMap;
+
+import org.json.JSONObject;
+
+import com.meal.util.HttpUtil;
+import com.meal.util.JSONFactoryUtil;
+import com.meal.util.ParamsFactory;
+
+public abstract class BaseAction {
+
+	/**
+	 * @param module
+	 * @param action
+	 * @param targetCls
+	 * @param paramsMap
+	 * @return
+	 */
+	public Object load(String module, String action, Class<?> targetCls,
+			HashMap paramsMap) {
+
+		Object result = null;
+
+		if (null != module && null != action && null != targetCls) {
+
+			ParamsFactory paramsFactory = new ParamsFactory();
+
+			String parameters = paramsFactory.parser(paramsMap);
+
+			JSONObject jsonObject = HttpUtil.Get(module, action, parameters);
+
+			result = (null == targetCls) ? jsonObject : JSONFactoryUtil
+					.parserToJavaBeanObject(jsonObject, targetCls);
+
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * @param module
+	 * @param action
+	 * @param paramsMap
+	 * @return
+	 */
+	public boolean load(String module, String action, HashMap paramsMap) {
+
+		boolean result = false;
+
+		if (null != module && null != action) {
+
+			ParamsFactory paramsFactory = new ParamsFactory();
+
+			String parameters = paramsFactory.parser(paramsMap);
+
+			if (null != HttpUtil.Get(module, action, parameters)) {
+
+				result = true;
+
+			}
+
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * @param module
+	 * @param action
+	 * @param javaBeanObject
+	 * @param targetCls
+	 * @param paramsMap
+	 * @return
+	 */
+	public Object send(String module, String action, Object javaBeanObject,
+			Class<?> targetCls, HashMap paramsMap) {
+
+		Object result = null;
+
+		if (null != module && null != action && null != targetCls) {
+
+			ParamsFactory paramsFactory = new ParamsFactory();
+
+			String parameters = paramsFactory.parser(paramsMap);
+
+			String postData = JSONFactoryUtil
+					.parserToJsonString(javaBeanObject);
+
+			JSONObject jsonObject = HttpUtil.Post(module, action, parameters,
+					postData);
+
+			result = (null == targetCls) ? jsonObject : JSONFactoryUtil
+					.parserToJavaBeanObject(jsonObject, targetCls);
+
+		}
+
+		return result;
+	}
+
+	/**
+	 * @param module
+	 * @param action
+	 * @param javaBeanObject
+	 * @param paramsMap
+	 * @return
+	 */
+	public boolean send(String module, String action, Object javaBeanObject,
+			HashMap paramsMap) {
+
+		boolean result = false;
+
+		if (null != module && null != action) {
+
+			ParamsFactory paramsFactory = new ParamsFactory();
+
+			String parameters = paramsFactory.parser(paramsMap);
+
+			String postData = JSONFactoryUtil
+					.parserToJsonString(javaBeanObject);
+
+			if (null != HttpUtil.Post(module, action, parameters, postData)) {
+
+				result = true;
+
+			}
+
+		}
+
+		return result;
+
+	}
+
+}

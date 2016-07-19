@@ -1,0 +1,54 @@
+package com.meal.action;
+
+import java.util.HashMap;
+
+import org.json.JSONObject;
+
+import com.meal.util.HttpUtil;
+import com.meal.util.JSONFactoryUtil;
+import com.meal.util.ParamsFactory;
+
+public abstract class BaseAction {
+
+	public Object load(String module, String action, Class<?> targetCls,
+			HashMap paramsMap) {
+
+		if (null == module || null == action || null == targetCls) {
+
+			return null;
+
+		}
+
+		ParamsFactory paramsFactory = new ParamsFactory();
+
+		String parameters = paramsFactory.parser(paramsMap);
+
+		JSONObject jsonObject = HttpUtil.Get(module, action, parameters);
+
+		return JSONFactoryUtil.parserToJavaBeanObject(jsonObject, targetCls);
+
+	}
+
+	public Object send(String module, String action, Object javaBeanObject,
+			Class<?> targetCls, HashMap paramsMap) {
+
+		if (null == module || null == action) {
+
+			return null;
+
+		}
+
+		ParamsFactory paramsFactory = new ParamsFactory();
+
+		String parameters = paramsFactory.parser(paramsMap);
+
+		String postData = JSONFactoryUtil.parserToJsonString(javaBeanObject);
+
+		JSONObject jsonObject = HttpUtil.Post(module, action, parameters,
+				postData);
+
+		return JSONFactoryUtil.parserToJavaBeanObject(jsonObject, targetCls);
+
+	}
+
+}

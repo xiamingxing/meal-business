@@ -1,0 +1,102 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.meal.activity"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="15" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".TestActivity"
+        android:theme="@android:style/Theme.NoTitleBar">
+            
+        </activity>
+        <activity
+            android:name=".StorelistActivity"
+        android:theme="@android:style/Theme.NoTitleBar">
+            
+        </activity>
+        <activity
+            android:name=".GoodslistActivity"
+        	android:theme="@android:style/Theme.NoTitleBar">
+        	
+        	
+        </activity>
+        <activity
+            android:name=".AddGoodslistActivity"
+        	android:theme="@android:style/Theme.NoTitleBar">
+            
+        </activity>
+        <activity
+            android:name=".AllOrderActivity"
+        	android:theme="@android:style/Theme.NoTitleBar">
+              
+        </activity>
+        <activity
+            android:name=".MealMainActivity"
+        	android:theme="@android:style/Theme.NoTitleBar">
+        	
+            
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+        	android:theme="@android:style/Theme.NoTitleBar">
+            
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+        	android:theme="@android:style/Theme.NoTitleBar">
+            
+        </activity>
+        <activity
+            android:name=".UndergolistActivity"
+        	android:theme="@android:style/Theme.NoTitleBar">
+        	
+            
+        </activity>
+		        <activity
+            android:name="com.meal.saleactivty.SaleLoginActivity"
+            android:label="SaleMeal">
+           <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+                                                                    
+
+
+        </activity>
+        <activity
+            android:name="com.meal.saleactivty.RegisterActivity"
+           android:label="RegisterActivity">
+
+        </activity>
+        <activity
+            android:name="com.meal.saleactivty.SaleInfoActivity"
+           android:label="saleInfoActivity">
+           
+
+        </activity>
+        <activity
+            android:name="com.meal.saleactivty.SaleOrderList"
+           android:label="SaleOrderList">
+           
+           
+
+        </activity>
+        <activity
+            android:name="com.meal.saleactivty.SaleOrderInfo"
+           android:label="SaleOrderInfo">
+		   </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,158 @@
+package com.meal.bean;
+
+import java.util.ArrayList;
+
+public class Seller {
+
+	private Long sid;
+
+	private String name;
+
+	private String passWord;
+
+	private String phone;
+
+	private String address;
+
+	private String logo;
+
+	private String description;
+
+	private ArrayList<Long> menuList;
+
+	private ArrayList<Long> orderList;
+
+	private Boolean orderFunctionSwitch;
+
+	private String type;
+
+	private ArrayList<Long> messageList;
+
+	private Seller() {
+	}
+
+	public Seller(String name, String passWord, String logo,
+			String description, String phone, String address, String type) {
+
+		this.sid = -1l;
+
+		this.name = name;
+
+		this.passWord = passWord;
+
+		this.phone = phone;
+
+		this.address = address;
+
+		this.logo = logo != null ? logo : Constant.SELLER_LOGO_DEFAULT_URL;
+
+		this.description = description;
+
+		this.menuList = null;
+
+		this.orderList = null;
+
+		this.orderFunctionSwitch = false;
+
+		this.type = type;
+
+		this.messageList = null;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPassWord() {
+		return passWord;
+	}
+
+	public void setPassWord(String passWord) {
+		this.passWord = passWord;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public ArrayList<Long> getMenuList() {
+		return menuList;
+	}
+
+	public void setMenuList(ArrayList<Long> menuList) {
+		this.menuList = menuList;
+	}
+
+	public ArrayList<Long> getMessageList() {
+		return messageList;
+	}
+
+	public void setMessageList(ArrayList<Long> messageList) {
+		this.messageList = messageList;
+	}
+
+	public Long getSid() {
+		return sid;
+	}
+
+	public void setSid(Long sid) {
+		this.sid = sid;
+	}
+
+	public Boolean getOrderFunctionSwitch() {
+		return orderFunctionSwitch;
+	}
+
+	public void setOrderFunctionSwitch(Boolean orderFunctionSwitch) {
+		this.orderFunctionSwitch = orderFunctionSwitch;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public ArrayList<Long> getOrderList() {
+		return orderList;
+	}
+
+	public void setOrderList(ArrayList<Long> orderList) {
+		this.orderList = orderList;
+	}
+
+}
